@@ -1,3 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Dongle:wght@300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Acme&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bangers&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .link {
+    @apply text-blue-500 hover:underline cursor-pointer transition-all hover:text-purple-400;
+  }
+  .active {
+    @apply border-[0.2px] border-fuchsia-400 shadow-inner rounded-md p-2;
+  }
+  .userCard {
+    @apply flex space-x-6 items-center justify-around mx-11 md:mx-0 md:space-x-0 relative border p-11 md:p-24 bg-white shadow-sm md:shadow-xl rounded-md;
+  }
+  .userCardHidden {
+    @apply md:absolute inset-0 flex flex-col justify-center items-center space-y-5 md:bg-black/50 z-10 md:opacity-0 transition-all group-hover:opacity-100 rounded-md;
+  }
+  .authButton {
+    @apply uppercase font-semibold px-3 p-2 bg-black text-slate-100 w-28 hover:bg-slate-100 hover:text-slate-800 hover:ring-4 hover:ring-black;
+  }
+  .userImage {
+    @apply relative h-24 w-24 md:h-40 md:w-40 rounded-full overflow-hidden shadow-md;
+  }
+  .authCard {
+    @apply flex flex-col items-center space-y-2 md:space-y-8 group-hover:opacity-80;
+  }
+}
