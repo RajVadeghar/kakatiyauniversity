@@ -7,8 +7,9 @@ import Avatar from "../components/Avatar";
 import Navbar from "../components/Navbar";
 import UserDetails from "../components/UserDetails";
 import UserEditForm from "../components/UserEditForm";
+import Error from "next/error";
 
-function Profile({ user }) {
+function Profile({ user, hasError }) {
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState(false);
   const { data: session } = useSession();
@@ -22,6 +23,10 @@ function Profile({ user }) {
       setMessage("");
     }
   };
+
+  if (hasError) {
+    return <Error statusCode={404} />;
+  }
 
   return (
     <div className="min-h-screen w-full bg-slate-50 text-slate-900 antialiased">
@@ -85,7 +90,7 @@ export default Profile;
 
 export async function getServerSideProps({ req, query }) {
   const session = await getSession({ req });
-  let user = await getuser(query?.id);
+  const user = (await getuser(query?.id)) || null;
 
   if (!session) {
     return {
@@ -96,13 +101,7 @@ export async function getServerSideProps({ req, query }) {
     };
   }
 
-  if (user.hasError) {
-    return {
-      notFound: true,
-    };
-  }
-
   return {
-    props: { session, user: user.data || null },
+    props: { session, user: user.data || null, hasError: user.hasError },
   };
 }
