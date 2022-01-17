@@ -2,30 +2,60 @@ import { getSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signup } from "../client/request";
 
-function Register({ session }) {
-  const [userId, setUserId] = useState("2056718");
-  const [branch, setBranch] = useState("it");
-  const [dateOfJoining, setDateOfJoining] = useState("2020-10-01");
-  const [dateOfPassOut, setDateOfPassOut] = useState("2023-05-01");
+function FacultyRegister({ session }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [branch, setBranch] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
+  useEffect(() => {
+    const unsubscribe = () => {
+      let password = "";
+      while (!password || password.length !== 4) {
+        password = prompt("Please enter password");
+      }
+      if (password === process.env.FACULTY_KEY) setIsAuthenticated(true);
+    };
+
+    return unsubscribe();
+  }, []);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="h-screen w-screen grid place-items-center">
+        <Head>
+          <title>Faculty Authenticate</title>
+          <link rel="icon" href="/1logo.png" />
+        </Head>
+        <div className="flex flex-col space-y-3 items-center">
+          <p className="text-4xl text-black capitalize font-semibold">
+            Enter correct password to view form
+          </p>
+          <div className="flex space-x-4 items-center">
+            <span className="link text-gray-700">
+              <Link href="/">Go Back</Link>
+            </span>
+            <p onClick={() => location.reload()} className="link text-gray-700">
+              Enter password again
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  console.log(userId)
+
   const createUser = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      uid: userId,
-      branch,
-      dateOfJoining,
-      dateOfPassOut,
-      email,
-      password,
-    };
+    const payload = { uid: userId, branch, email, password, isFaculty: true };
 
     const user = await signup(payload);
 
@@ -35,8 +65,6 @@ function Register({ session }) {
       setErrorMessage("");
       setUserId("");
       setBranch("");
-      setDateOfJoining("");
-      setDateOfPassOut("");
       setEmail("");
       setPassword("");
       router.replace("/login");
@@ -46,7 +74,7 @@ function Register({ session }) {
   return (
     <div className="bg-login bg-cover grid place-items-center h-screen overflow-hidden">
       <Head>
-        <title>Student Registration</title>
+        <title>Faculty Registration</title>
         <link rel="icon" href="/1logo.png" />
       </Head>
       <form
@@ -72,7 +100,7 @@ function Register({ session }) {
           value={branch}
           onChange={(e) => setBranch(e.target.value)}
         >
-          <option value="">Choose your branch</option>
+          <option value="">Choose your Department</option>
           <option value="cse">CSE</option>
           <option value="it">IT</option>
           <option value="ece">ECE</option>
@@ -80,20 +108,6 @@ function Register({ session }) {
           <option value="mechanical">MECHANICAL</option>
           <option value="civil">CIVIL</option>
         </select>
-        <input
-          className="rounded-full bg-slate-50 px-3 p-2 outline-none focus-within:shadow-md"
-          type="date"
-          placeholder="year of joining"
-          value={dateOfJoining}
-          onChange={(e) => setDateOfJoining(e.target.value)}
-        />
-        <input
-          className="rounded-full bg-slate-50 px-3 p-2 outline-none focus-within:shadow-md"
-          type="date"
-          placeholder="pass out year"
-          value={dateOfPassOut}
-          onChange={(e) => setDateOfPassOut(e.target.value)}
-        />
         <input
           className="rounded-full bg-slate-50 px-3 p-2 outline-none focus-within:shadow-md"
           type="email"
@@ -126,7 +140,7 @@ function Register({ session }) {
   );
 }
 
-export default Register;
+export default FacultyRegister;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);

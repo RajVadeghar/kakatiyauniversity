@@ -1,13 +1,16 @@
+import { getSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Header from "../components/Header";
 
-export default function Home() {
+export default function Home({ session }) {
   const router = useRouter();
 
+  console.log(session);
+
   return (
-    <div className="md:h-screen overflow-hidden bg-slate-100 text-slate-800 antialiased">
+    <div className="md:h-screen overflow-hidden bg-slate-50 text-slate-900 antialiased">
       <Head>
         <title>Kakatiya University</title>
         <link rel="icon" href="/1logo.png" />
@@ -21,7 +24,7 @@ export default function Home() {
             <h3 className="text-2xl font-semibold">Student</h3>
             <div className="userImage">
               <Image
-                class="object-contain"
+                className="object-contain"
                 src="/student.jpg"
                 alt=""
                 layout="fill"
@@ -49,7 +52,7 @@ export default function Home() {
             <h3 className="text-2xl font-semibold">Faculty</h3>
             <div className="userImage">
               <Image
-                class="object-contain"
+                className="object-contain"
                 src="/faculty.jpg"
                 alt=""
                 layout="fill"
@@ -65,7 +68,7 @@ export default function Home() {
             </button>
             <button
               className="authButton"
-              onClick={() => router.push("/register")}
+              onClick={() => router.push("/facultyRegister")}
             >
               Register
             </button>
@@ -74,4 +77,21 @@ export default function Home() {
       </main>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (session) {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
 }
