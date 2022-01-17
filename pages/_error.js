@@ -1,3 +1,7 @@
+import { EmojiSadIcon } from "@heroicons/react/outline";
+import Head from "next/head";
+import Navbar from "../components/Navbar";
+
 function Error({ statusCode }) {
   return (
     <div>
