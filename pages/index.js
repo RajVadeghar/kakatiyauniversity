@@ -7,8 +7,6 @@ import Header from "../components/Header";
 export default function Home({ session }) {
   const router = useRouter();
 
-  console.log(session);
-
   return (
     <div className="md:h-screen overflow-hidden bg-slate-50 text-slate-900 antialiased">
       <Head>
@@ -79,8 +77,8 @@ export default function Home({ session }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
+export async function getServerSideProps({ req, res }) {
+  const session = await getSession({ req });
 
   if (session) {
     return {
