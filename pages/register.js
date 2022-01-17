@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { signup } from "../client/request";
 
-function Register({ session }) {
+function Register() {
   const [userId, setUserId] = useState("2056718");
   const [branch, setBranch] = useState("it");
   const [dateOfJoining, setDateOfJoining] = useState("2020-10-01");
@@ -128,7 +128,7 @@ function Register({ session }) {
 
 export default Register;
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
 
   if (session) {

@@ -40,7 +40,8 @@ export default NextAuth({
   callbacks: {
     async session({ session, token }) {
       if (token && token.uid) {
-        session.user.id = token.uid;
+        session.user.id = token.id;
+        session.user.uid = token.uid;
         session.user.isFaculty = token.isFaculty;
         session.user.branch = token.branch;
         session.user.name = token.name;
@@ -52,6 +53,7 @@ export default NextAuth({
     },
     async jwt({ token, user }) {
       if (user && user._id) {
+        token.id = user._id;
         token.uid = user.uid;
         token.isFaculty = user.isFaculty;
         token.branch = user.branch;

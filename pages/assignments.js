@@ -1,9 +1,10 @@
-import { getSession, signOut, useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import AssignmentSection from "../components/AssignmentSection";
 import Navbar from "../components/Navbar";
 
-function Assignments({ session }) {
+function Assignments() {
+  const { data: session } = useSession();
   return (
     <div className="min-h-screen w-full bg-slate-50 text-slate-900 antialiased">
       <Head>
@@ -20,7 +21,7 @@ function Assignments({ session }) {
 
 export default Assignments;
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
 
   if (!session) {

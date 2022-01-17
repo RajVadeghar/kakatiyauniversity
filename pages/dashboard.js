@@ -3,7 +3,8 @@ import Head from "next/head";
 import ClassLinkSection from "../components/ClassLinkSection";
 import Navbar from "../components/Navbar";
 
-function Dashboard({ session }) {
+function Dashboard() {
+  const { data: session } = useSession();
   return (
     <div className="min-h-screen w-full bg-slate-50 text-slate-900 antialiased">
       <Head>
@@ -22,7 +23,6 @@ export default Dashboard;
 
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
-
 
   if (!session) {
     return {

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
-function Login({ session }) {
+function Login() {
   const [userId, setUserId] = useState("2056718");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -78,7 +78,7 @@ function Login({ session }) {
 
 export default Login;
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
 
   if (session) {

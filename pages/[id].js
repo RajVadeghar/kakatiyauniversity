@@ -18,7 +18,7 @@ function Profile() {
   const router = useRouter();
 
   const user = userData?.data;
-  const loggedInUser = session?.user.id === user?.uid;
+  const loggedInUser = session?.user.uid === user?.uid;
 
   useEffect(() => {
     const unsubscribe = async () => {

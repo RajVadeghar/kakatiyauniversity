@@ -15,7 +15,7 @@ function Navbar() {
             className="hidden md:inline-block font-Dongle text-4xl before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-indigo-500 relative hover:cursor-pointer"
           >
             <span className="relative text-white font-bold">
-              Hieee, {session?.user?.id || session?.user.name || ""}
+              Hieee, {session?.user.name || session?.user?.uid || ""}
             </span>
           </h1>
         </div>
