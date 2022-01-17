@@ -48,7 +48,6 @@ export default async function handler(req, res) {
       errorHandler(error, res);
     }
   } else if (method === "DELETE") {
-    console.log(id);
     try {
       if (session.user.isFaculty) {
         const user = await User.deleteOne({ uid: id });
@@ -58,8 +57,7 @@ export default async function handler(req, res) {
         return errorHandler("only faculty can delete accounts", res);
       }
     } catch (error) {
-      res.status(400).json(error);
-      // errorHandler(error, res);
+      errorHandler(error, res);
     }
   } else {
     errorHandler("Invalid request type", res);

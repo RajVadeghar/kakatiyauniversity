@@ -34,8 +34,7 @@ export default async function handler(req, res) {
 
       responseHandler(userDoc, res);
     } catch (error) {
-      res.status(400).json(error);
-      // errorHandler(error, res);
+      errorHandler(error, res);
     }
   } else {
     errorHandler("Invalid request type", res);
