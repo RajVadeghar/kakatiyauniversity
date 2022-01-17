@@ -23,7 +23,6 @@ export default Dashboard;
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
 
-  console.log(session);
 
   if (!session) {
     return {

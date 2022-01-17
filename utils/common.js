@@ -31,6 +31,9 @@ export const getValue = (obj, path, defaultValue) => {
     if (!(obj instanceof Array)) {
       let myValue = obj;
       for (const key of path) {
+        if (!key) {
+          break;
+        }
         if (!key in myValue) {
           return defaultValue;
         } else {
@@ -40,7 +43,6 @@ export const getValue = (obj, path, defaultValue) => {
       return myValue;
     }
   } catch (error) {
-    console.log({ error });
     return defaultValue;
   }
 };

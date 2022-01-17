@@ -19,7 +19,6 @@ function Login({ session }) {
     if (!user.error) {
       router.replace("/dashboard");
     } else {
-      console.log(user);
       setErrorMessage(user.error);
     }
   };

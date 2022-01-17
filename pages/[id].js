@@ -1,4 +1,4 @@
-import { EmojiSadIcon, PencilIcon, XIcon } from "@heroicons/react/outline";
+import { PencilIcon, XIcon } from "@heroicons/react/outline";
 import { getSession, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useState } from "react";

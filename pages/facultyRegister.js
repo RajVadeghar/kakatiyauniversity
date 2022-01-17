@@ -50,8 +50,6 @@ function FacultyRegister({ session }) {
     );
   }
 
-  console.log(userId);
-
   const createUser = async (e) => {
     e.preventDefault();
 

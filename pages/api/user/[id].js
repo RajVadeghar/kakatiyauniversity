@@ -35,7 +35,7 @@ export default async function handler(req, res) {
         errorHandler("You can update only your account", res);
       }
     } catch (error) {
-      errorHandler(error, res);
+      errorHandler("User not found", res);
     }
   } else if (method === "GET") {
     try {
@@ -51,7 +51,6 @@ export default async function handler(req, res) {
     try {
       if (session.user.isFaculty) {
         const user = await User.deleteOne({ uid: id });
-        console.log(user);
         responseHandler("Account has been deleted successfully", res);
       } else {
         return errorHandler("only faculty can delete accounts", res);
