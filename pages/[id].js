@@ -1,19 +1,32 @@
 import { PencilIcon, XIcon } from "@heroicons/react/outline";
 import { getSession, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { deleteuser, getuser } from "../client/request";
 import Avatar from "../components/Avatar";
 import Navbar from "../components/Navbar";
 import UserDetails from "../components/UserDetails";
 import UserEditForm from "../components/UserEditForm";
 import Error from "next/error";
+import { useRouter } from "next/router";
 
-function Profile({ user, hasError }) {
+function Profile() {
+  const [userData, setUserData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState(false);
   const { data: session } = useSession();
+  const router = useRouter();
+
+  const user = userData?.data;
   const loggedInUser = session?.user.id === user?.uid;
+
+  useEffect(() => {
+    const unsubscribe = async () => {
+      const user = await getuser(router?.query?.id);
+      setUserData(user);
+    };
+    return unsubscribe();
+  }, []);
 
   const deleteUser = async (id) => {
     const user = await deleteuser(id);
@@ -24,8 +37,12 @@ function Profile({ user, hasError }) {
     }
   };
 
-  if (hasError) {
+  if (userData?.hasError) {
     return <Error statusCode={404} />;
+  }
+
+  if (!user) {
+    return null;
   }
 
   return (
@@ -90,13 +107,6 @@ export default Profile;
 
 export async function getServerSideProps({ req, query }) {
   const session = await getSession({ req });
-  const user = (await getuser(query?.id)) || null;
-
-  if (!user) {
-    return {
-      notFound: true,
-    };
-  }
 
   if (!session) {
     return {
@@ -108,6 +118,6 @@ export async function getServerSideProps({ req, query }) {
   }
 
   return {
-    props: { session, user: user.data || null, hasError: user.hasError },
+    props: { session },
   };
 }
