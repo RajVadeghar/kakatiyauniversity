@@ -12,18 +12,17 @@ import { useRouter } from "next/router";
 
 function Profile() {
   const [userData, setUserData] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
 
-  const user = userData?.data;
-  const loggedInUser = session?.user.uid === user?.uid;
-
   useEffect(() => {
     const unsubscribe = async () => {
       const user = await getuser(router?.query?.id);
       setUserData(user);
+      setIsMounted(true);
     };
     return unsubscribe();
   }, []);
@@ -41,9 +40,10 @@ function Profile() {
     return <Error statusCode={404} />;
   }
 
-  if (!user) {
-    return null;
-  }
+  if (!isMounted) return null;
+
+  const user = userData?.data;
+  const loggedInUser = session?.user.uid === user?.uid;
 
   return (
     <div className="min-h-screen w-full bg-slate-50 text-slate-900 antialiased">
