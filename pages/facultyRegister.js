@@ -50,7 +50,7 @@ function FacultyRegister({ session }) {
     );
   }
 
-  console.log(userId)
+  console.log(userId);
 
   const createUser = async (e) => {
     e.preventDefault();
@@ -142,8 +142,8 @@ function FacultyRegister({ session }) {
 
 export default FacultyRegister;
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
+export async function getServerSideProps({ req, res }) {
+  const session = await getSession({ req });
 
   if (session) {
     return {

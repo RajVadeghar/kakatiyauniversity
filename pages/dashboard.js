@@ -20,8 +20,8 @@ function Dashboard({ session }) {
 
 export default Dashboard;
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req });
 
   console.log(session);
 

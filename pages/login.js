@@ -79,8 +79,8 @@ function Login({ session }) {
 
 export default Login;
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
+export async function getServerSideProps({ req, res }) {
+  const session = await getSession({ req });
 
   if (session) {
     return {

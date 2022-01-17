@@ -128,8 +128,8 @@ function Register({ session }) {
 
 export default Register;
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
+export async function getServerSideProps({ req, res }) {
+  const session = await getSession({ req });
 
   if (session) {
     return {

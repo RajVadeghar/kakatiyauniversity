@@ -22,8 +22,8 @@ function Assignments({ session }) {
 
 export default Assignments;
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
+export async function getServerSideProps({ req, res }) {
+  const session = await getSession({ req });
 
   if (!session) {
     return {
