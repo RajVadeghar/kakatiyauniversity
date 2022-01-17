@@ -92,6 +92,12 @@ export async function getServerSideProps({ req, query }) {
   const session = await getSession({ req });
   const user = (await getuser(query?.id)) || null;
 
+  if (user.data === null) {
+    return {
+      notFound: true,
+    };
+  }
+
   if (!session) {
     return {
       redirect: {
