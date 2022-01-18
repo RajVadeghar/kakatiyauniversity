@@ -19,14 +19,14 @@ function ClassLinkItem() {
           </video> */}
           <iframe
             className="aspect-video w-full"
-            src="https://www.youtube.com/embed/T9KWsO4aM5Q"
+            src="https://www.youtube.com/embed/x7Krla_UxRg"
           ></iframe>
           <div className="flex items-center space-x-5">
             <p>
               <span className="text-sm text-slate-600">By</span> Ramana Babu
             </p>
             <p>
-              Uploaded at:{" "}
+              Uploaded on:{" "}
               <span className="text-sm text-slate-600">16th nov</span>
             </p>
           </div>
