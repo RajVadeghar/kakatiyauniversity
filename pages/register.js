@@ -1,4 +1,3 @@
-import { getSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -46,7 +45,7 @@ function Register() {
   };
 
   return (
-    <div className="bg-login bg-cover grid place-items-center h-screen overflow-hidden">
+    <div className="bg-login bg-cover bg-center grid place-items-center min-h-screen overflow-hidden">
       <Head>
         <title>{loading ? "Registering..." : "Student Registration"}</title>
         <link rel="icon" href="/1logo.png" />
@@ -61,60 +60,88 @@ function Register() {
             {errorMessage}
           </p>
         )}
-        <input
-          className="rounded-full bg-slate-50 px-3 p-2 outline-none focus-within:shadow-md"
-          type="text"
-          placeholder="Enter your ID number"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-        />
-        <select
-          label="branch"
-          className="rounded-full bg-slate-50 px-3 p-2 outline-none focus-within:shadow-md"
-          value={branch}
-          onChange={(e) => setBranch(e.target.value)}
-        >
-          <option value="">Choose your branch</option>
-          <option value="cse">CSE</option>
-          <option value="it">IT</option>
-          <option value="ece">ECE</option>
-          <option value="eee">EEE</option>
-          <option value="mechanical">MECHANICAL</option>
-          <option value="civil">CIVIL</option>
-        </select>
-        <input
-          className="rounded-full bg-slate-50 px-3 p-2 outline-none focus-within:shadow-md"
-          type="date"
-          placeholder="year of joining"
-          value={dateOfJoining}
-          onChange={(e) => setDateOfJoining(e.target.value)}
-        />
-        <input
-          className="rounded-full bg-slate-50 px-3 p-2 outline-none focus-within:shadow-md"
-          type="date"
-          placeholder="pass out year"
-          value={dateOfPassOut}
-          onChange={(e) => setDateOfPassOut(e.target.value)}
-        />
-        <input
-          className="rounded-full bg-slate-50 px-3 p-2 outline-none focus-within:shadow-md"
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="rounded-full bg-slate-50 px-3 p-2 outline-none focus-within:shadow-md"
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          type="submit"
-          tabIndex="0"
-          className="authButton text-center cursor-pointer"
-        >
+        <div className="w-full">
+          <label htmlFor="rno" className="label">
+            Roll no:
+          </label>
+          <input
+            className="input"
+            type="text"
+            name="rno"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+          />
+        </div>
+        <div className="w-full">
+          <label htmlFor="branch" className="label">
+            branch:
+          </label>
+          <select
+            label="branch"
+            name="branch"
+            className="input"
+            value={branch}
+            onChange={(e) => setBranch(e.target.value)}
+          >
+            <option value="">Choose your branch</option>
+            <option value="cse">CSE</option>
+            <option value="it">IT</option>
+            <option value="ece">ECE</option>
+            <option value="eee">EEE</option>
+            <option value="mechanical">MECHANICAL</option>
+            <option value="civil">CIVIL</option>
+          </select>
+        </div>
+        <div className="w-full">
+          <label htmlFor="yoj" className="label">
+            year of joining:
+          </label>
+          <input
+            className="input"
+            type="date"
+            name="yoj"
+            value={dateOfJoining}
+            onChange={(e) => setDateOfJoining(e.target.value)}
+          />
+        </div>
+        <div className="w-full">
+          <label htmlFor="poy" className="label">
+            year of pass out:
+          </label>
+          <input
+            className="input"
+            type="date"
+            name="poy"
+            value={dateOfPassOut}
+            onChange={(e) => setDateOfPassOut(e.target.value)}
+          />
+        </div>
+        <div className="w-full">
+          <label htmlFor="email" className="label">
+            email:
+          </label>
+          <input
+            className="input"
+            type="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="w-full">
+          <label htmlFor="password" className="label">
+            password:
+          </label>
+          <input
+            className="input"
+            type="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+
+        <button type="submit" className="authButton text-center cursor-pointer">
           {loading ? "Registering..." : "Register"}
         </button>
         <p>

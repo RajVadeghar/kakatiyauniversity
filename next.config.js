@@ -1,3 +1,5 @@
 module.exports = {
-  env: {},
+  env: {
+    FACULTY_KEY: 1234,
+  },
 };

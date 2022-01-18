@@ -6,6 +6,33 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  }
+
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(0, 0, 0, 0.6);
+  }
+}
+
 @layer components {
   .link {
     @apply text-blue-500 hover:underline cursor-pointer transition-all hover:text-purple-400;
@@ -27,5 +54,11 @@
   }
   .authCard {
     @apply flex flex-col items-center space-y-2 md:space-y-8 group-hover:opacity-80;
+  }
+  .input {
+    @apply rounded-md w-full bg-slate-50 px-3 p-2 outline-none focus-within:shadow-md text-gray-600 border-2;
+  }
+  .label {
+    @apply text-xs uppercase p-2 font-semibold;
   }
 }

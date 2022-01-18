@@ -9,14 +9,6 @@ function ClassLinkItem() {
           6th lesson Strings topic
         </summary>
         <div className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-          {/* <video width="320" height="240" autoplay>
-            <source
-              src="https://www.youtube.com/watch?v=T9KWsO4aM5Q"
-              type="video/mp4"
-            />
-            <source src="movie.ogg" type="video/ogg" />
-            Your browser does not support the video tag.
-          </video> */}
           <iframe
             className="aspect-video w-full"
             src="https://www.youtube.com/embed/x7Krla_UxRg"

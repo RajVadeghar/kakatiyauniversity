@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { getSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
 function Login() {
-  const [userId, setUserId] = useState("205671865l");
-  const [password, setPassword] = useState("Raj@21");
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
@@ -27,7 +27,7 @@ function Login() {
   };
 
   return (
-    <div className="bg-login bg-cover grid place-items-center h-screen overflow-hidden">
+    <div className="bg-login bg-cover bg-center grid place-items-center h-screen overflow-hidden">
       <Head>
         <title>{loading ? "Signing In..." : "Sign In"}</title>
         <link rel="icon" href="/1logo.png" />
@@ -42,22 +42,30 @@ function Login() {
             {errorMessage}
           </p>
         )}
-        <input
-          className="rounded-full bg-slate-50 px-3 p-2 outline-none focus-within:shadow-md"
-          type="text"
-          name="username"
-          placeholder="Enter your ID number"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-        />
-        <input
-          className="rounded-full bg-slate-50 px-3 p-2 outline-none focus-within:shadow-md"
-          type="password"
-          name="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="w-full">
+          <label htmlFor="uid" className="label">
+            Roll Number:
+          </label>
+          <input
+            className="input"
+            type="text"
+            name="uid"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+          />
+        </div>
+        <div className="w-full">
+          <label htmlFor="password" className="label">
+            Password:
+          </label>
+          <input
+            className="input"
+            type="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
         <button
           type="submit"
           tabIndex="0"
