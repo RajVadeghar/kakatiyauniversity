@@ -45,6 +45,8 @@ function Profile() {
   const user = userData?.data;
   const loggedInUser = session?.user.uid === user?.uid;
 
+  console.log(user);
+
   return (
     <div className="min-h-screen w-full bg-slate-50 text-slate-900 antialiased">
       <Head>
