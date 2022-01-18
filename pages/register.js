@@ -6,13 +6,14 @@ import { useState } from "react";
 import { signup } from "../client/request";
 
 function Register() {
-  const [userId, setUserId] = useState("2056718");
-  const [branch, setBranch] = useState("it");
-  const [dateOfJoining, setDateOfJoining] = useState("2020-10-01");
-  const [dateOfPassOut, setDateOfPassOut] = useState("2023-05-01");
+  const [userId, setUserId] = useState("");
+  const [branch, setBranch] = useState("");
+  const [dateOfJoining, setDateOfJoining] = useState("");
+  const [dateOfPassOut, setDateOfPassOut] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const createUser = async (e) => {
@@ -26,7 +27,7 @@ function Register() {
       email,
       password,
     };
-
+    setLoading(true);
     const user = await signup(payload);
 
     if (user.hasError) {
@@ -41,12 +42,13 @@ function Register() {
       setPassword("");
       router.replace("/login");
     }
+    setLoading(false);
   };
 
   return (
     <div className="bg-login bg-cover grid place-items-center h-screen overflow-hidden">
       <Head>
-        <title>Student Registration</title>
+        <title>{loading ? "Registering..." : "Student Registration"}</title>
         <link rel="icon" href="/1logo.png" />
       </Head>
       <form
@@ -113,7 +115,7 @@ function Register() {
           tabIndex="0"
           className="authButton text-center cursor-pointer"
         >
-          Register
+          {loading ? "Registering..." : "Register"}
         </button>
         <p>
           Already have an account?{" "}

@@ -2,7 +2,7 @@ import Image from "next/image";
 
 function Header() {
   return (
-    <header className="flex items-center justify-between w-screen h-40 p-5 px-11 border-b shadow-md">
+    <header className="flex items-center justify-between w-screen h-20 sm:h-40 p-5 px-11 border-b shadow-md">
       <div className="hidden sm:inline-block relative h-40 w-40">
         <Image
           className="object-contain"

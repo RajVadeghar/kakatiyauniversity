@@ -12,7 +12,7 @@ function Dashboard() {
         <link rel="icon" href="/1logo.png" />
       </Head>
       <Navbar />
-      <div className="w-screen px-5 md:px-0 md:max-w-screen-2xl xl:max-w-screen-xl mx-auto flex items-center justify-between h-full">
+      <div className="w-screen px-2 md:px-0 md:max-w-screen-2xl xl:max-w-screen-xl mx-auto flex items-center justify-between h-full">
         <ClassLinkSection />
       </div>
     </div>

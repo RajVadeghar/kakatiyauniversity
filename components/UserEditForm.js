@@ -1,9 +1,8 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { updateuser } from "../client/request";
 import FormInput from "./FormInput";
 
-function UserEditForm({ user }) {
+function UserEditForm({ user, updateUser }) {
   if (!user) return null;
   const { data: session } = useSession();
   const {
@@ -29,6 +28,7 @@ function UserEditForm({ user }) {
     dateOfBirth,
     name,
     errorMessage: "",
+    successMessage: "",
   });
 
   const inputs = [
@@ -100,7 +100,7 @@ function UserEditForm({ user }) {
     },
   ];
 
-  const updateUser = async (e) => {
+  const update = async (e) => {
     e.preventDefault();
 
     const {
@@ -127,10 +127,10 @@ function UserEditForm({ user }) {
       name,
     };
 
-    const user = await updateuser({ ...payload });
+    const user = await updateUser(payload);
 
     if (user.hasError) {
-      setErrorMessage(user.errorMessage);
+      setValues({ ...values, errorMessage: user.errorMessage });
     } else {
       setValues({
         branch,
@@ -143,6 +143,10 @@ function UserEditForm({ user }) {
         dateOfBirth,
         name,
       });
+      setValues({
+        ...values,
+        successMessage: "Updated user successfully! Cheers :)",
+      });
     }
   };
 
@@ -152,9 +156,19 @@ function UserEditForm({ user }) {
 
   return (
     <form
-      onSubmit={updateUser}
+      onSubmit={update}
       className="flex flex-col items-start space-y-4 w-full animate-fade-up"
     >
+      {values.errorMessage && (
+        <p className="text center text-red-500 text-center capitalize font-semibold text-sm mb-5">
+          {values.errorMessage}
+        </p>
+      )}
+      {values.successMessage && (
+        <p className="text center text-green-500 text-center capitalize font-semibold text-sm w-full">
+          {values.successMessage}
+        </p>
+      )}
       {inputs.map((input) => (
         <FormInput
           key={input.id}

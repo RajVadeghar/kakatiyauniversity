@@ -12,6 +12,7 @@ function FacultyRegister({ session }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -54,7 +55,7 @@ function FacultyRegister({ session }) {
     e.preventDefault();
 
     const payload = { uid: userId, branch, email, password, isFaculty: true };
-
+    setLoading(true);
     const user = await signup(payload);
 
     if (user.hasError) {
@@ -67,12 +68,13 @@ function FacultyRegister({ session }) {
       setPassword("");
       router.replace("/login");
     }
+    setLoading(false);
   };
 
   return (
     <div className="bg-login bg-cover grid place-items-center h-screen overflow-hidden">
       <Head>
-        <title>Faculty Registration</title>
+        <title>{loading ? "Registering..." : "Faculty Registration"}</title>
         <link rel="icon" href="/1logo.png" />
       </Head>
       <form
@@ -125,7 +127,7 @@ function FacultyRegister({ session }) {
           tabIndex="0"
           className="authButton text-center cursor-pointer"
         >
-          Register
+          {loading ? "Registering..." : "Register"}
         </button>
         <p>
           Already have an account?{" "}

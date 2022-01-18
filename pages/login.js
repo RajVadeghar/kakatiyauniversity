@@ -7,6 +7,7 @@ import Head from "next/head";
 function Login() {
   const [userId, setUserId] = useState("205671865l");
   const [password, setPassword] = useState("Raj@21");
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
@@ -14,6 +15,7 @@ function Login() {
     e.preventDefault();
 
     const payload = { uid: userId, password };
+    setLoading(true);
     const user = await signIn("credentials", { ...payload, redirect: false });
 
     if (!user.error) {
@@ -21,12 +23,13 @@ function Login() {
     } else {
       setErrorMessage(user.error);
     }
+    setLoading(false);
   };
 
   return (
     <div className="bg-login bg-cover grid place-items-center h-screen overflow-hidden">
       <Head>
-        <title>Sign In</title>
+        <title>{loading ? "Signing In..." : "Sign In"}</title>
         <link rel="icon" href="/1logo.png" />
       </Head>
       <form
@@ -58,9 +61,12 @@ function Login() {
         <button
           type="submit"
           tabIndex="0"
-          className="authButton text-center cursor-pointer"
+          className={`authButton text-center cursor-pointer ${
+            loading && "opacity-80"
+          }`}
+          disabled={loading}
         >
-          Sign In
+          {loading ? "Signing In..." : "Sign In"}
         </button>
         <p>
           Haven't registered yet?{" "}

@@ -30,18 +30,20 @@ export default function Home() {
             </div>
           </div>
           <div className="userCardHidden">
-            <button
-              className="authButton"
-              onClick={() => router.push("/login")}
-            >
-              Sign In
-            </button>
-            <button
-              className="authButton"
-              onClick={() => router.push("/register")}
-            >
-              Register
-            </button>
+            <div className="flex flex-col space-y-5">
+              <button
+                className="authButton"
+                onClick={() => router.push("/login")}
+              >
+                Sign In
+              </button>
+              <button
+                className="authButton"
+                onClick={() => router.push("/register")}
+              >
+                Register
+              </button>
+            </div>
           </div>
         </div>
 
@@ -58,18 +60,20 @@ export default function Home() {
             </div>
           </div>
           <div className="userCardHidden">
-            <button
-              className="authButton"
-              onClick={() => router.push("/login")}
-            >
-              Sign In
-            </button>
-            <button
-              className="authButton"
-              onClick={() => router.push("/facultyRegister")}
-            >
-              Register
-            </button>
+            <div className="flex flex-col space-y-5">
+              <button
+                className="authButton"
+                onClick={() => router.push("/login")}
+              >
+                Sign In
+              </button>
+              <button
+                className="authButton"
+                onClick={() => router.push("/facultyRegister")}
+              >
+                Register
+              </button>
+            </div>
           </div>
         </div>
       </main>

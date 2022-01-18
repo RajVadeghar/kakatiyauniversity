@@ -6,7 +6,6 @@ export const signup = async (payload) => {
     const res = await axios.post("/api/signup", payload);
     return res.data;
   } catch (error) {
-    /* 
     const errorMsg = getValue(error, ["response", "data"]);
     if (typeof errorMsg.errorMessage === "object") {
       if (
@@ -16,8 +15,8 @@ export const signup = async (payload) => {
         return { hasError: true, errorMessage: "Roll number already exists" };
       }
       return { hasError: true, errorMessage: "Invalid data" };
-    } */
-    return error;
+    }
+    return errorMsg;
   }
 };
 
