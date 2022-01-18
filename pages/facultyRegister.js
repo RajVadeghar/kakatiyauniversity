@@ -139,20 +139,3 @@ function FacultyRegister({ session }) {
 }
 
 export default FacultyRegister;
-
-export async function getServerSideProps({ req, res }) {
-  const session = await getSession({ req });
-
-  if (session) {
-    return {
-      redirect: {
-        destination: "/dashboard",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { session },
-  };
-}

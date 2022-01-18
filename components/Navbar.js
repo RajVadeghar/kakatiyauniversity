@@ -37,7 +37,7 @@ function Navbar() {
             Class Links
           </li>
           <li
-            onClick={() => router.push(`/${session?.user.id}`)}
+            onClick={() => router.push(`/${session?.user.uid}`)}
             className={`link text-slate-800 ${
               router.pathname === "/profile" && "active"
             }`}

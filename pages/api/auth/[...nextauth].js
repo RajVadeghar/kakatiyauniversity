@@ -36,7 +36,7 @@ export default NextAuth({
       },
     }),
   ],
-  secret: process.env.SECRET,
+  secret: process.env.JWT_SECRET,
   callbacks: {
     async session({ session, token }) {
       if (token && token.uid) {

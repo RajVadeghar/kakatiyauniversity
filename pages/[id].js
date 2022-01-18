@@ -107,8 +107,8 @@ function Profile() {
 
 export default Profile;
 
-export async function getServerSideProps({ req, query }) {
-  const session = await getSession({ req });
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
 
   if (!session) {
     return {

@@ -5,8 +5,8 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 
 function Login() {
-  const [userId, setUserId] = useState("2056718");
-  const [password, setPassword] = useState("");
+  const [userId, setUserId] = useState("205671865l");
+  const [password, setPassword] = useState("Raj@21");
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
@@ -77,20 +77,3 @@ function Login() {
 }
 
 export default Login;
-
-export async function getServerSideProps({ req }) {
-  const session = await getSession({ req });
-
-  if (session) {
-    return {
-      redirect: {
-        destination: "/dashboard",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { session },
-  };
-}

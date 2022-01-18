@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     }
   } else if (method === "GET") {
     try {
-      const user = await User.findById(id);
+      const user = await User.findOne({ uid: id });
       const userDoc = user._doc;
       delete userDoc.password;
 
