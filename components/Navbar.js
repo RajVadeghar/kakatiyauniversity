@@ -11,7 +11,7 @@ function Navbar() {
   const [loading, setLoading] = useState(false);
   const user = useRecoilValue(userState);
 
-  const currentUser = user?.data?.uid === session.user.uid;
+  // const currentUser = user?.data?.uid === session.user.uid;
 
   const logout = async () => {
     setLoading(true);
@@ -28,11 +28,7 @@ function Navbar() {
             className="hidden md:inline-block font-Dongle text-4xl before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-indigo-500 relative hover:cursor-pointer"
           >
             <span className="relative text-white font-bold">
-              Hieee,{" "}
-              {(currentUser && user?.data?.name) ||
-                session?.user.name ||
-                session?.user?.uid ||
-                ""}
+              Hieee, {session?.user.name || session?.user?.uid || ""}
             </span>
           </h1>
         </div>
