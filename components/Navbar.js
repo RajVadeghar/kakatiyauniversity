@@ -9,9 +9,6 @@ function Navbar() {
   const { data: session } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const user = useRecoilValue(userState);
-
-  // const currentUser = user?.data?.uid === session.user.uid;
 
   const logout = async () => {
     setLoading(true);
