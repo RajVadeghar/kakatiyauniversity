@@ -17,7 +17,7 @@ function Avatar({ src = null, height = 11 }) {
     >
       {src ? (
         <img
-          className="object-cover object-top h-full w-full rounded-full brightness-110"
+          className="object-cover object-top h-full rounded-full brightness-110"
           src={src}
           alt=""
         />
