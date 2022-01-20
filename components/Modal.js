@@ -47,7 +47,7 @@ function Modal() {
 
     const imageRef = ref(
       storage,
-      `images/${user.uid}/profileImg/${user.email}`
+      `images/${user?.uid}/profileImg/${user?.email}`
     );
     const uploadTask = uploadBytesResumable(imageRef, uploadFile);
 

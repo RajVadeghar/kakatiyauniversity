@@ -2,8 +2,6 @@ import { signOut, useSession } from "next-auth/react";
 import { LogoutIcon, UserCircleIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
-import { userState } from "../atoms/userAtom";
 
 function Navbar() {
   const { data: session } = useSession();
@@ -21,7 +19,7 @@ function Navbar() {
       <div className="w-screen px-5 md:px-0 md:max-w-screen-2xl xl:max-w-screen-xl mx-auto flex items-center justify-between h-full">
         <div>
           <h1
-            onClick={() => router.push(`/${session.user.uid}`)}
+            onClick={() => router.push(`/${session?.user.uid}`)}
             className="hidden md:inline-block font-Dongle text-4xl before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-indigo-500 relative hover:cursor-pointer"
           >
             <span className="relative text-white font-bold">
@@ -53,10 +51,10 @@ function Navbar() {
             }`}
           >
             <div className="h-11 w-11 rounded-full overflow-hidden">
-              {session.user.image ? (
+              {session?.user.image ? (
                 <img
                   className="h-full object-cover object-center rounded-full brightness-110"
-                  src={session.user.image}
+                  src={session?.user.image}
                 />
               ) : (
                 <UserCircleIcon className="h-full" />
