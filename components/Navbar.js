@@ -11,8 +11,6 @@ function Navbar() {
   const [loading, setLoading] = useState(false);
   const user = useRecoilValue(userState);
 
-  console.log(user);
-
   const currentUser = user?.data?.uid === session.user.uid;
 
   const logout = async () => {
@@ -31,7 +29,7 @@ function Navbar() {
           >
             <span className="relative text-white font-bold">
               Hieee,{" "}
-              {(currentUser && user?.data.name) ||
+              {(currentUser && user?.data?.name) ||
                 session?.user.name ||
                 session?.user?.uid ||
                 ""}
