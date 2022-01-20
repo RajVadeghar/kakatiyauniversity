@@ -3,23 +3,26 @@ import { PencilIcon, XIcon } from "@heroicons/react/outline";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { deleteuser, getuser, updateuser } from "../client/request";
+import { deleteuser, getuser, updateuser } from "../utils/request";
 import Avatar from "./Avatar";
 import UserDetails from "./UserDetails";
 import UserEditForm from "./UserEditForm";
+import { useRecoilState } from "recoil";
+import { userState } from "../atoms/userAtom";
+import { ref, deleteObject } from "firebase/storage";
+import { storage } from "../utils/firebase";
 
 function ProfileSection() {
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useRecoilState(userState);
 
   const { data: session } = useSession();
   const router = useRouter();
 
   const user = userData?.data;
   const loggedInUser = session?.user.uid === user?.uid;
-  console.log(userData);
 
   useEffect(() => {
     const unsubscribe = async () => {
@@ -30,6 +33,7 @@ function ProfileSection() {
   }, [loading]);
 
   const updateUser = async (payload) => {
+    if (loading) return;
     setLoading(true);
     const user = await updateuser({ ...payload });
     setLoading(false);
@@ -37,12 +41,25 @@ function ProfileSection() {
   };
 
   const deleteUser = async (id) => {
+    if (loading) return;
     setLoading(true);
+
+    const deleteRef = ref(
+      storage,
+      `images/${userData?.data.uid}/profileImg/${userData?.data.email}`
+    );
+
+    deleteObject(deleteRef)
+      .then(async () => {
+        setMessage("");
+      })
+      .catch((err) => setMessage(err));
+
     const user = await deleteuser(id);
     if (user.hasError) {
       setMessage(user.errorMessage);
     } else {
-      setMessage("");
+      setLoading(false);
       router.replace("/dashboard");
     }
     setLoading(false);
@@ -73,7 +90,7 @@ function ProfileSection() {
         </div>
       )}
 
-      <Avatar height="40" />
+      <Avatar src={user?.img} height="40" />
 
       <div className="flex-1 flex flex-col items-start space-y-2 animate-fade-up">
         {isEditing ? (

@@ -68,7 +68,6 @@ function Login() {
         </div>
         <button
           type="submit"
-          tabIndex="0"
           className={`authButton text-center cursor-pointer ${
             loading && "opacity-80"
           }`}

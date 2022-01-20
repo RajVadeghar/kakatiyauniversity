@@ -1,28 +1,44 @@
-import { CameraIcon } from "@heroicons/react/outline";
+import { CameraIcon, UserCircleIcon } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
+import { useRecoilState } from "recoil";
+import { modalState } from "../atoms/modalAtom";
 
-function Avatar({ height = 11 }) {
+function Avatar({ src = null, height = 11 }) {
   const { data: session } = useSession();
+  const [open, setOpen] = useRecoilState(modalState);
 
   const uploadPhoto = () => {
-    alert("Uploading");
+    setOpen(true);
   };
 
   return (
-    <div className={`h-${height} rounded-full overflow-hidden relative group`}>
+    <div
+      className={`grid place-items-center h-${height} w-${height} rounded-full overflow-hidden relative group ring-4 ring-indigo-500 bg-white`}
+    >
+      {src ? (
+        <img
+          className="object-cover object-top h-full w-full rounded-full brightness-110"
+          src={src}
+          alt=""
+        />
+      ) : (
+        <UserCircleIcon className="h-full" />
+      )}
+      {/* <div className="absolute inset-0 backdrop-blur-sm z-0">
+        <img
+          className="h-full object-cover object-center"
+          src={src || "/avatar.png"}
+          alt=""
+        />
+      </div> */}
       <div
         onClick={uploadPhoto}
         className="absolute inset-0 grid place-items-center bg-black/50 opacity-0 group-hover:opacity-100 group-hover:cursor-pointer"
       >
-        <div className="h-16 p-3 bg-black/70 rounded-full">
+        <div className="h-16 p-3 bg-black/10 rounded-full">
           <CameraIcon className="h-full text-white" />
         </div>
       </div>
-      <img
-        className="h-full object-contain"
-        src={session?.user?.image || "/avatar.png"}
-        alt=""
-      />
     </div>
   );
 }

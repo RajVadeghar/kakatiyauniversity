@@ -35,7 +35,7 @@
 
 @layer components {
   .link {
-    @apply text-blue-500 hover:underline cursor-pointer transition-all hover:text-purple-400;
+    @apply text-blue-500 hover:underline cursor-pointer transition-all hover:text-purple-400 select-none;
   }
   .active {
     @apply border-[0.2px] border-fuchsia-400 shadow-inner rounded-md p-2;
@@ -47,7 +47,7 @@
     @apply md:absolute inset-0 flex justify-center items-center md:bg-black/50 z-10 md:opacity-0 transition-all group-hover:opacity-100 rounded-md;
   }
   .authButton {
-    @apply uppercase font-semibold px-3 p-2 bg-black text-slate-100 rounded-md hover:bg-white hover:text-slate-900 hover:ring-2 hover:ring-black;
+    @apply uppercase font-semibold px-3 p-2 bg-black text-slate-100 rounded-md transition-all hover:bg-white hover:text-slate-900 hover:ring-2 hover:ring-black;
   }
   .userImage {
     @apply relative h-24 w-24 md:h-40 md:w-40 rounded-full overflow-hidden shadow-md;

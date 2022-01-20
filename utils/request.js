@@ -1,7 +1,7 @@
 import axios from "axios";
-import { getValue } from "../utils/common";
+import { getValue } from "./common";
 
-export const signup = async (payload) => {
+export const registeruser = async (payload) => {
   try {
     const res = await axios.post("/api/signup", payload);
     return res.data;
@@ -13,6 +13,12 @@ export const signup = async (payload) => {
         "id" in errorMsg.errorMessage.keyValue
       ) {
         return { hasError: true, errorMessage: "Roll number already exists" };
+      }
+      if (
+        errorMsg.errorMessage.code === 11000 &&
+        "email" in errorMsg.errorMessage.keyValue
+      ) {
+        return { hasError: true, errorMessage: "Email already exists" };
       }
       return { hasError: true, errorMessage: "Invalid data" };
     }

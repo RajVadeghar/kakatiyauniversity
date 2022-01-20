@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { signup } from "../client/request";
+import { registeruser } from "../utils/request";
 
 function FacultyRegister() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -56,7 +56,7 @@ function FacultyRegister() {
 
     const payload = { uid: userId, branch, email, password, isFaculty: true };
     setLoading(true);
-    const user = await signup(payload);
+    const user = await registeruser(payload);
 
     if (user.hasError) {
       setErrorMessage(user.errorMessage);

@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { signup } from "../client/request";
+import { registeruser } from "../utils/request";
 
 function Register() {
   const [userId, setUserId] = useState("");
@@ -27,7 +27,7 @@ function Register() {
       password,
     };
     setLoading(true);
-    const user = await signup(payload);
+    const user = await registeruser(payload);
 
     if (user.hasError) {
       setErrorMessage(user.errorMessage);

@@ -2,11 +2,18 @@ import { signOut, useSession } from "next-auth/react";
 import { LogoutIcon, UserCircleIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { userState } from "../atoms/userAtom";
 
 function Navbar() {
   const { data: session } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const user = useRecoilValue(userState);
+
+  console.log(user);
+
+  const currentUser = user?.data?.uid === session.user.uid;
 
   const logout = async () => {
     setLoading(true);
@@ -19,11 +26,15 @@ function Navbar() {
       <div className="w-screen px-5 md:px-0 md:max-w-screen-2xl xl:max-w-screen-xl mx-auto flex items-center justify-between h-full">
         <div>
           <h1
-            onClick={() => router.replace(`/${session.user.id}`)}
+            onClick={() => router.push(`/${session.user.uid}`)}
             className="hidden md:inline-block font-Dongle text-4xl before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-indigo-500 relative hover:cursor-pointer"
           >
             <span className="relative text-white font-bold">
-              Hieee, {session?.user.name || session?.user?.uid || ""}
+              Hieee,{" "}
+              {(currentUser && user?.data.name) ||
+                session?.user.name ||
+                session?.user?.uid ||
+                ""}
             </span>
           </h1>
         </div>
@@ -50,8 +61,15 @@ function Navbar() {
               router.pathname === "/profile" && "active"
             }`}
           >
-            <div className="h-9">
-              <UserCircleIcon className="h-full" />
+            <div className="h-11 w-11 rounded-full overflow-hidden">
+              {session.user.image ? (
+                <img
+                  className="h-full object-cover object-center rounded-full brightness-110"
+                  src={session.user.image}
+                />
+              ) : (
+                <UserCircleIcon className="h-full" />
+              )}
             </div>
           </li>
           <li onClick={logout} className="link text-slate-800">
