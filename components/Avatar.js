@@ -1,14 +1,16 @@
 import { CameraIcon, UserCircleIcon } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
-import { useRecoilState } from "recoil";
-import { modalState } from "../atoms/modalAtom";
+import { useDispatch, useSelector } from "react-redux";
+import { toggle } from "../redux/modalSlice";
 
 function Avatar({ src = null, height = 11 }) {
   const { data: session } = useSession();
-  const [open, setOpen] = useRecoilState(modalState);
+
+  const dispatch = useDispatch();
+  const isOpen = useSelector((state) => state.modalState.isOpen);
 
   const uploadPhoto = () => {
-    setOpen(true);
+    dispatch(toggle());
   };
 
   return (

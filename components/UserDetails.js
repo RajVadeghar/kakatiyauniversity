@@ -1,26 +1,36 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
-function UserDetails({ user }) {
-  if (!user) return null;
-
+function UserDetails() {
+  const user = useSelector((state) => state.userState.data);
+  if (!user) return;
   const [dob, setDob] = useState(null);
   const {
     branch,
     email,
     uid,
     isFaculty,
-    dateOfJoining,
     dateOfPassOut,
     desc,
     dateOfBirth,
     name,
   } = user;
 
+  const [currentYear, setCurrentYear] = useState(null);
+
   useEffect(() => {
     const unsubscribe = (e) => {
       const datearray = dateOfBirth?.split("-");
       dateOfBirth &&
         setDob(datearray[2] + "-" + datearray[1] + "-" + datearray[0]);
+
+      const currentTime = new Date();
+      const currentYear = currentTime.getFullYear();
+      const currentMonth = currentTime.getMonth();
+      const passOutYear = dateOfPassOut?.split("-")[0];
+      dateOfPassOut && currentMonth < 6
+        ? setCurrentYear(currentYear - passOutYear + 4)
+        : setCurrentYear(currentYear - passOutYear + 5);
     };
     return unsubscribe();
   }, [dateOfBirth]);
@@ -44,18 +54,22 @@ function UserDetails({ user }) {
         <span className="text-sm font-semibold text-gray-600">Roll No:</span>{" "}
         {uid}
       </p>
-      <p className="uppercase">
-        <span className="text-sm font-semibold text-gray-600">
-          Current Year:
-        </span>{" "}
-        {parseInt(dateOfPassOut) - parseInt(dateOfJoining)}
-      </p>
-      <p className="uppercase">
-        <span className="text-sm font-semibold text-gray-600">
-          Date Of Birth:
-        </span>{" "}
-        {dob}
-      </p>
+      {!isFaculty && (
+        <p className="uppercase">
+          <span className="text-sm font-semibold text-gray-600">
+            Current Year:
+          </span>{" "}
+          {currentYear}
+        </p>
+      )}
+      {dob && (
+        <p className="uppercase">
+          <span className="text-sm font-semibold text-gray-600">
+            Date Of Birth:
+          </span>{" "}
+          {dob}
+        </p>
+      )}
     </div>
   );
 }

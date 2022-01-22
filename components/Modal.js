@@ -1,28 +1,22 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { CameraIcon } from "@heroicons/react/outline";
 import { Fragment, useRef, useState } from "react";
-import { useRecoilState } from "recoil";
-import { modalState } from "../atoms/modalAtom";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytesResumable,
-  uploadString,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../utils/firebase";
 import { updateuser } from "../utils/request";
-import { userState } from "../atoms/userAtom";
+import { useDispatch, useSelector } from "react-redux";
+import { toggle } from "../redux/modalSlice";
 
 function Modal() {
-  const [open, setOpen] = useRecoilState(modalState);
+  const isOpen = useSelector((state) => state.modalState.isOpen);
+  const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadFile, setUploadFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [progress, setProgress] = useState(0);
 
-  const [userData, setUserData] = useRecoilState(userState);
-  const user = userData?.data;
+  const user = useSelector((state) => state.userState);
 
   const cancelButtonRef = useRef(null);
   const filePickerRef = useRef(null);
@@ -65,6 +59,7 @@ function Modal() {
         });
       }
     );
+
     setProgress(0);
     setLoading(false);
     setSelectedFile(null);
@@ -72,12 +67,12 @@ function Modal() {
   };
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
         initialFocus={cancelButtonRef}
-        onClose={setOpen}
+        onClose={() => dispatch(toggle())}
       >
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
@@ -140,6 +135,7 @@ function Modal() {
                 <div className="">
                   <input
                     type="file"
+                    accept="image/*"
                     ref={filePickerRef}
                     onChange={addImageToPost}
                     hidden

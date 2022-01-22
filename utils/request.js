@@ -1,4 +1,5 @@
 import axios from "axios";
+import { server } from "../config";
 import { getValue } from "./common";
 
 export const registeruser = async (payload) => {
@@ -48,7 +49,17 @@ export const deleteuser = async (id) => {
 
 export const getuser = async (id) => {
   try {
-    const res = await axios.get(`/api/user/${id}`);
+    const res = await axios.get(`${server}/api/user/${id}`);
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};
+
+export const postClass = async (payload) => {
+  try {
+    const res = await axios.post(`/api/classlink`, payload);
     return res.data;
   } catch (error) {
     const errorMsg = getValue(error, ["response", "data"]);

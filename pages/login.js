@@ -27,7 +27,7 @@ function Login() {
   };
 
   return (
-    <div className="bg-login bg-cover bg-center grid place-items-center h-screen overflow-hidden">
+    <div className="bg-login bg-cover bg-center grid place-items-center min-h-screen">
       <Head>
         <title>{loading ? "Signing In..." : "Sign In"}</title>
         <link rel="icon" href="/1logo.png" />

@@ -32,6 +32,7 @@ module.exports = {
       backgroundImage: {
         login: "url('/login.jpg')",
         register: "url('/register.jpg')",
+        addClass: "url('/addClass.jpg')",
       },
     },
   },

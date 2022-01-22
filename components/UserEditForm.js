@@ -1,8 +1,10 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import FormInput from "./FormInput";
 
-function UserEditForm({ user, updateUser }) {
+function UserEditForm({ updateUser }) {
+  const user = useSelector((state) => state.userState.data);
   if (!user) return null;
   const { data: session } = useSession();
   const {

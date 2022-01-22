@@ -83,7 +83,7 @@ function Register() {
             value={branch}
             onChange={(e) => setBranch(e.target.value)}
           >
-            <option value="">Choose your branch</option>
+            <option hidden value=""></option>
             <option value="cse">CSE</option>
             <option value="it">IT</option>
             <option value="ece">ECE</option>
