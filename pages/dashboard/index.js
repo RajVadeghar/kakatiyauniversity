@@ -163,7 +163,7 @@ function Dashboard({ classes }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {classLinks.data.map((classLink) => (
+                  {classLinks?.data?.map((classLink) => (
                     <ClassLinkItem key={classLink._id} classLink={classLink} />
                   ))}
                 </tbody>
