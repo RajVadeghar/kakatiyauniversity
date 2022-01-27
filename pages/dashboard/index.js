@@ -16,7 +16,6 @@ function Dashboard({ classes }) {
   const [subject, setSubject] = useState("");
   const [branch, setBranch] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const [hasChanged, setHasChanged] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -31,11 +30,26 @@ function Dashboard({ classes }) {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = () => {
-      setHasChanged(true);
+    const unsubscribe = async () => {
+      const queryStringArray = [];
+
+      const sub = subject.toLowerCase().split(" ").join("%20");
+
+      queryStringArray.push(branch ? `branch=${branch}` : "");
+      queryStringArray.push(semester ? `semester=${semester}` : "");
+      queryStringArray.push(subject ? `subject=${sub}` : "");
+
+      const queryString = "";
+      queryStringArray.map(
+        (query) => (queryString = queryString + query + "&")
+      );
+
+      const res = await getClasses(queryString);
+      setClassLinks(res);
+      console.log(classLinks);
     };
     return unsubscribe();
-  }, [classLinks]);
+  }, [router.query]);
 
   const fetchData = async () => {
     const queryStringArray = [];
@@ -48,7 +62,6 @@ function Dashboard({ classes }) {
 
     const queryString = "";
     queryStringArray.map((query) => (queryString = queryString + query + "&"));
-    setHasChanged(false);
 
     const res = await getClasses(queryString);
     setClassLinks(res);
@@ -56,8 +69,6 @@ function Dashboard({ classes }) {
       shallow: true,
     });
   };
-
-  if (!hasChanged) return null;
 
   return (
     <div className="min-h-screen w-full bg-slate-50 text-slate-900 antialiased">

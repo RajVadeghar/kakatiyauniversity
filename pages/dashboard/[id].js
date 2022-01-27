@@ -7,9 +7,8 @@ import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { getClass, updateClassLink } from "../../utils/request";
 
-function VideoPage({ classLinkData }) {
+function VideoPage({ classLink }) {
   const { data: session } = useSession();
-  const [classLink, setClassLink] = useState(classLinkData);
   const router = useRouter();
   const {
     title,
@@ -23,14 +22,6 @@ function VideoPage({ classLinkData }) {
     createdAt,
     watchedBy,
   } = classLink;
-
-  useEffect(() => {
-    const unsubscribe = async () => {
-      const classLink = await getClass(router.query.id);
-      setClassLink(classLink);
-    };
-    return unsubscribe();
-  }, [watchedBy]);
 
   function userExists() {
     return watchedBy.some(function (person) {
@@ -170,6 +161,6 @@ export async function getServerSideProps(ctx) {
   }
 
   return {
-    props: { session, classLinkData: classLink.data },
+    props: { session, classLink: classLink.data },
   };
 }
