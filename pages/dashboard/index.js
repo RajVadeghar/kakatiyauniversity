@@ -8,13 +8,13 @@ import Navbar from "../../components/Navbar";
 import { getSemesters, getSubjects } from "../../utils/common";
 import { getClasses } from "../../utils/request";
 
-function Dashboard({ classes }) {
+function Dashboard({ classes, serverBranch, serverSemester, serverSubject }) {
   const classLinks = useRef(classes);
   const [semesters, setSemesters] = useState([]);
-  const [semester, setSemester] = useState("");
+  const [semester, setSemester] = useState(serverSemester);
   const [subjects, setSubjects] = useState([]);
-  const [subject, setSubject] = useState("");
-  const [branch, setBranch] = useState("");
+  const [subject, setSubject] = useState(serverSubject);
+  const [branch, setBranch] = useState(serverBranch);
   const [isVisible, setIsVisible] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
@@ -43,9 +43,7 @@ function Dashboard({ classes }) {
 
     const res = await getClasses(queryString);
     classLinks.current = res;
-    router.push(`/dashboard?${queryString}`, undefined, {
-      shallow: true,
-    });
+    router.push(`/dashboard?${queryString}`, undefined);
   };
 
   return (
@@ -211,6 +209,12 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: { session, classes: classLinks },
+    props: {
+      session,
+      classes: classLinks,
+      serverBranch: branch || "",
+      serverSemester: semester || "",
+      serverSubject: subject || "",
+    },
   };
 }
