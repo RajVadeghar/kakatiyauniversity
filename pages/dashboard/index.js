@@ -16,6 +16,7 @@ function Dashboard({ classes }) {
   const [subject, setSubject] = useState("");
   const [branch, setBranch] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(true);
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -42,10 +43,12 @@ function Dashboard({ classes }) {
     queryStringArray.map((query) => (queryString = queryString + query + "&"));
 
     const res = await getClasses(queryString);
+    setIsMounted(false);
     setClassLinks(res);
     router.push(`/dashboard?${queryString}`, undefined, {
       shallow: true,
     });
+    setIsMounted(true);
   };
 
   return (
@@ -163,9 +166,13 @@ function Dashboard({ classes }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {classLinks?.data?.map((classLink) => (
-                    <ClassLinkItem key={classLink._id} classLink={classLink} />
-                  ))}
+                  {isMounted &&
+                    classLinks?.data?.map((classLink) => (
+                      <ClassLinkItem
+                        key={classLink._id}
+                        classLink={classLink}
+                      />
+                    ))}
                 </tbody>
               </table>
             </div>
