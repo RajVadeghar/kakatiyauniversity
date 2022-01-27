@@ -2,21 +2,20 @@ import { PlusIcon, SearchIcon } from "@heroicons/react/outline";
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ClassLinkItem from "../../components/ClassLinkItem";
 import Navbar from "../../components/Navbar";
 import { getSemesters, getSubjects } from "../../utils/common";
 import { getClasses } from "../../utils/request";
 
 function Dashboard({ classes }) {
-  const [classLinks, setClassLinks] = useState(classes);
+  const classLinks = useRef(classes);
   const [semesters, setSemesters] = useState([]);
   const [semester, setSemester] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [subject, setSubject] = useState("");
   const [branch, setBranch] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const [isMounted, setIsMounted] = useState(true);
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -42,13 +41,11 @@ function Dashboard({ classes }) {
     const queryString = "";
     queryStringArray.map((query) => (queryString = queryString + query + "&"));
 
-    setIsMounted(false);
     const res = await getClasses(queryString);
-    setClassLinks(res);
+    classLinks.current = res;
     router.push(`/dashboard?${queryString}`, undefined, {
       shallow: true,
     });
-    setIsMounted(true);
   };
 
   return (
@@ -166,13 +163,9 @@ function Dashboard({ classes }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {isMounted &&
-                    classLinks.data.map((classLink) => (
-                      <ClassLinkItem
-                        key={classLink._id}
-                        classLink={classLink}
-                      />
-                    ))}
+                  {classLinks.current?.data?.map((classLink) => (
+                    <ClassLinkItem key={classLink._id} classLink={classLink} />
+                  ))}
                 </tbody>
               </table>
             </div>
