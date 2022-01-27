@@ -16,6 +16,7 @@ function Dashboard({ classes, serverBranch, serverSemester, serverSubject }) {
   const [subject, setSubject] = useState(serverSubject);
   const [branch, setBranch] = useState(serverBranch);
   const [isVisible, setIsVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -28,6 +29,15 @@ function Dashboard({ classes, serverBranch, serverSemester, serverSubject }) {
     };
     return unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = () => {
+      if (classLinks.current) {
+        setIsMounted(true);
+      }
+    };
+    return unsubscribe();
+  }, [classLinks.current]);
 
   const fetchData = async () => {
     const queryStringArray = [];
@@ -45,6 +55,8 @@ function Dashboard({ classes, serverBranch, serverSemester, serverSubject }) {
     classLinks.current = res;
     router.push(`/dashboard?${queryString}`, undefined);
   };
+
+  if (!isMounted) return null;
 
   return (
     <div className="min-h-screen w-full bg-slate-50 text-slate-900 antialiased">
