@@ -2,21 +2,21 @@ import { PlusIcon, SearchIcon } from "@heroicons/react/outline";
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ClassLinkItem from "../../components/ClassLinkItem";
 import Navbar from "../../components/Navbar";
 import { getSemesters, getSubjects } from "../../utils/common";
 import { getClasses } from "../../utils/request";
 
-function Dashboard({ classes, serverBranch, serverSemester, serverSubject }) {
-  const classLinks = useRef(classes);
+function Dashboard({ classes }) {
+  const [classLinks, setClassLinks] = useState(classes);
   const [semesters, setSemesters] = useState([]);
-  const [semester, setSemester] = useState(serverSemester);
+  const [semester, setSemester] = useState("");
   const [subjects, setSubjects] = useState([]);
-  const [subject, setSubject] = useState(serverSubject);
-  const [branch, setBranch] = useState(serverBranch);
+  const [subject, setSubject] = useState("");
+  const [branch, setBranch] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const [hasChanged, setHasChanged] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -32,12 +32,10 @@ function Dashboard({ classes, serverBranch, serverSemester, serverSubject }) {
 
   useEffect(() => {
     const unsubscribe = () => {
-      if (classLinks.current) {
-        setIsMounted(true);
-      }
+      setHasChanged(true);
     };
     return unsubscribe();
-  }, [classLinks.current]);
+  }, [classLinks]);
 
   const fetchData = async () => {
     const queryStringArray = [];
@@ -50,13 +48,16 @@ function Dashboard({ classes, serverBranch, serverSemester, serverSubject }) {
 
     const queryString = "";
     queryStringArray.map((query) => (queryString = queryString + query + "&"));
+    setHasChanged(false);
 
     const res = await getClasses(queryString);
-    classLinks.current = res;
-    router.push(`/dashboard?${queryString}`, undefined);
+    setClassLinks(res);
+    router.push(`/dashboard?${queryString}`, undefined, {
+      shallow: true,
+    });
   };
 
-  if (!isMounted) return null;
+  if (!hasChanged) return null;
 
   return (
     <div className="min-h-screen w-full bg-slate-50 text-slate-900 antialiased">
@@ -173,7 +174,7 @@ function Dashboard({ classes, serverBranch, serverSemester, serverSubject }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {classLinks.current?.data?.map((classLink) => (
+                  {classLinks?.data?.map((classLink) => (
                     <ClassLinkItem key={classLink._id} classLink={classLink} />
                   ))}
                 </tbody>
@@ -221,12 +222,6 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: {
-      session,
-      classes: classLinks,
-      serverBranch: branch || "",
-      serverSemester: semester || "",
-      serverSubject: subject || "",
-    },
+    props: { session, classes: classLinks },
   };
 }
