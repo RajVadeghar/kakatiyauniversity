@@ -8,13 +8,15 @@ import {
 import dbConnect from "../../../utils/mongo";
 
 export default async function handler(req, res) {
-  const { method } = req;
+  const {
+    method,
+    query: { branch, semester, subject },
+  } = req;
   const session = await getSession({ req });
 
   dbConnect();
 
   if (method === "POST") {
-    console.log(req.body);
     try {
       if (session?.user.isFaculty) {
         const { title, desc, year, branch, subject } = req.body;
@@ -35,7 +37,6 @@ export default async function handler(req, res) {
         }
 
         const classLink = await ClassLink.create(req.body);
-        // console.log(classLink);
 
         responseHandler(classLink, res);
       } else {
@@ -44,7 +45,46 @@ export default async function handler(req, res) {
     } catch (error) {
       errorHandler(error, res);
     }
+  } else if (method === "GET") {
+    try {
+      let classLink;
+      if (branch && subject && semester) {
+        const sub = subject.split("%20").join(" ");
+
+        classLink = await ClassLink.aggregate([
+          {
+            $match: {
+              $and: [
+                { branch: branch.toUpperCase() },
+                { sem: semester.toUpperCase() },
+                { subject: sub },
+              ],
+            },
+          },
+        ]);
+      } else {
+        classLink = await ClassLink.aggregate([{ $match: {} }]);
+      }
+
+      responseHandler(classLink, res);
+    } catch (error) {
+      errorHandler(error, res);
+    }
   } else {
     errorHandler("Invalid request type", res);
   }
 }
+
+/* else if (branch && semester) {
+  classLink = await ClassLink.find({ branch, semester });
+} else if (branch && sub) {
+  classLink = await ClassLink.find({ branch, sub });
+} else if (semester && sub) {
+  classLink = await ClassLink.find({ semester, sub });
+} else if (branch) {
+  classLink = await ClassLink.find({ branch });
+} else if (semester) {
+  classLink = await ClassLink.find({ semester });
+} else if (sub) {
+  classLink = await ClassLink.find({ sub });
+} */

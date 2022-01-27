@@ -129,7 +129,7 @@ function Modal() {
                   as="h3"
                   className="text-lg text-center leading-6 font-medium text-gray-900"
                 >
-                  Upload Your Profile Picture
+                  Upload Profile Picture
                 </Dialog.Title>
 
                 <div className="">

@@ -1,3 +1,5 @@
+import { subjects } from "./subjects";
+
 export const errorHandler = (data, res, code = 400) => {
   res.status(code).json({
     hasError: true,
@@ -45,4 +47,30 @@ export const getValue = (obj, path, defaultValue) => {
   } catch (error) {
     return defaultValue;
   }
+};
+
+export const getSemesters = () => {
+  const semesters = [];
+
+  for (const semIndex in subjects) {
+    semesters.push(semIndex);
+  }
+
+  return semesters;
+};
+
+export const getSubjects = () => {
+  const subjectsSet = new Set();
+
+  for (const semIndex in subjects) {
+    const semester = subjects[semIndex];
+    for (const branchIndex in semester) {
+      const branch = semester[branchIndex];
+      branch.map((sub) => {
+        subjectsSet.add(sub);
+      });
+    }
+  }
+
+  return subjectsSet;
 };

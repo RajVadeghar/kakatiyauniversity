@@ -66,3 +66,36 @@ export const postClass = async (payload) => {
     return errorMsg;
   }
 };
+
+export const getClasses = async (branchString) => {
+  try {
+    const res = await axios.get(`${server}/api/classlink?${branchString}`);
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};
+
+export const getClass = async (id) => {
+  try {
+    const res = await axios.get(`${server}/api/classlink/${id}`);
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};
+
+export const updateClassLink = async (payload) => {
+  try {
+    const res = await axios.put(
+      `${server}/api/classlink/${payload.id}`,
+      payload
+    );
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};

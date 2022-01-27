@@ -3,9 +3,9 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
+import { getSubjects } from "../utils/common";
 import { storage } from "../utils/firebase";
 import { postClass } from "../utils/request";
-import { subjects } from "../utils/subjects";
 
 function AddClass() {
   const [subjectsList, setSubjectsList] = useState({});
@@ -13,6 +13,7 @@ function AddClass() {
   const [desc, setDesc] = useState("");
   const [video, setVideo] = useState(null);
   const [year, setYear] = useState("");
+  const [sem, setSem] = useState("");
   const [branch, setBranch] = useState("");
   const [subject, setSubject] = useState("");
   const [progress, setProgress] = useState(0);
@@ -26,17 +27,7 @@ function AddClass() {
 
   useEffect(() => {
     const unsubscribe = () => {
-      const subjectsSet = new Set();
-
-      for (const semIndex in subjects) {
-        const semester = subjects[semIndex];
-        for (const branchIndex in semester) {
-          const branch = semester[branchIndex];
-          branch.map((sub) => {
-            subjectsSet.add(sub);
-          });
-        }
-      }
+      const subjectsSet = getSubjects();
 
       setSubjectsList(subjectsSet);
     };
@@ -74,8 +65,14 @@ function AddClass() {
             desc,
             video: { name: videoName, url },
             year,
+            sem,
             branch,
             subject,
+            postedBy: {
+              uid: session.user.uid,
+              name: session.user.name,
+              email: session.user.email,
+            },
           };
           const classLink = await postClass(payload);
           if (classLink.hasError) {
@@ -86,6 +83,7 @@ function AddClass() {
             setDesc("");
             setVideo(null);
             setYear("");
+            setSem("");
             setBranch("");
             setSubject("");
             setProgress(0);
@@ -145,8 +143,10 @@ function AddClass() {
         <div className="w-full">
           {!video ? (
             <div
+              tabIndex="0"
+              onKeyPress={() => filePickerRef.current.click()}
               onClick={() => filePickerRef.current.click()}
-              className="grid place-items-center h-11 w-11 rounded-full bg-red-100 mx-auto cursor-pointer transition-all hover:scale-105"
+              className="grid place-items-center h-11 w-11 rounded-full bg-red-100 mx-auto cursor-pointer transition-all hover:scale-105 outline-none focus:shadow-lg focus:scale-125"
             >
               <div className="h-7 w-7">
                 <VideoCameraIcon className="h-full text-red-600" />
@@ -174,6 +174,27 @@ function AddClass() {
           </select>
         </div>
         <div className="w-full">
+          <label htmlFor="sem" className="label">
+            Semester:
+          </label>
+          <select
+            className="input"
+            name="sem"
+            value={sem}
+            onChange={(e) => setSem(e.target.value)}
+          >
+            <option hidden value=""></option>
+            <option value="sem1">1st</option>
+            <option value="sem2">2nd</option>
+            <option value="sem3">3rd</option>
+            <option value="sem4">4th</option>
+            <option value="sem5">5th</option>
+            <option value="sem6">6th</option>
+            <option value="sem7">7th</option>
+            <option value="sem8">8th</option>
+          </select>
+        </div>
+        <div className="w-full">
           <label htmlFor="branch" className="label">
             Branch:
           </label>
@@ -190,6 +211,7 @@ function AddClass() {
             <option value="eee">EEE</option>
             <option value="mechanical">MECHANICAL</option>
             <option value="civil">CIVIL</option>
+            <option value="mining">MINING</option>
           </select>
         </div>
         <div className="w-full">

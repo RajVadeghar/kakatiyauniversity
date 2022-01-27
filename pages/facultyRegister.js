@@ -72,7 +72,7 @@ function FacultyRegister() {
   };
 
   return (
-    <div className="bg-login bg-cover bg-center grid place-items-center min-h-screen overflow-hidden">
+    <div className="bg-register bg-cover bg-center grid place-items-center min-h-screen overflow-hidden">
       <Head>
         <title>{loading ? "Registering..." : "Faculty Registration"}</title>
         <link rel="icon" href="/1logo.png" />
@@ -117,6 +117,7 @@ function FacultyRegister() {
             <option value="eee">EEE</option>
             <option value="mechanical">MECHANICAL</option>
             <option value="civil">CIVIL</option>
+            <option value="mining">MINING</option>
           </select>
         </div>
         <div className="w-full">

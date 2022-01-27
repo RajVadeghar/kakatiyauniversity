@@ -1,30 +1,39 @@
-function ClassLinkItem() {
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+
+function ClassLinkItem({ classLink }) {
+  const [sub, setSub] = useState("");
+  const { title, desc, video, year, sem, branch, subject, postedBy } =
+    classLink;
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = () => {
+      const res = subject
+        ?.split(" ")
+        .map((word) => word[0])
+        .join("");
+      setSub(res);
+    };
+    return unsubscribe();
+  }, []);
+
   return (
-    <li className="">
-      <details
-        className="open:bg-white dark:open:bg-slate-900 open:ring-1 open:ring-black/5 dark:open:ring-white/10 open:shadow-lg p-6 rounded-lg w-full hover:cursor-pointer"
-        open
+    <tr className="p-5 grid grid-cols-8 md:grid-cols-9 justify-items-start w-full text-xs md:text-base">
+      <td
+        onClick={() => router.push(`/dashboard/${classLink._id}`)}
+        className="col-span-3 link"
       >
-        <summary className="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none">
-          6th lesson Strings topic
-        </summary>
-        <div className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-          <iframe
-            className="aspect-video w-full"
-            src="https://www.youtube.com/embed/x7Krla_UxRg"
-          ></iframe>
-          <div className="flex items-center space-x-5">
-            <p>
-              <span className="text-sm text-slate-600">By</span> Ramana Babu
-            </p>
-            <p>
-              Uploaded on:{" "}
-              <span className="text-sm text-slate-600">16th nov</span>
-            </p>
-          </div>
-        </div>
-      </details>
-    </li>
+        {title}
+      </td>
+      <td className="col-span-1 hidden md:block">{year}</td>
+      <td className="col-span-1">{sem}</td>
+      <td className="col-span-1">{branch}</td>
+      <td className="col-span-1 uppercase">{sub}</td>
+      <td className="col-span-1 md:col-span-2">
+        {postedBy.name || postedBy.email || postedBy.uid}
+      </td>
+    </tr>
   );
 }
 

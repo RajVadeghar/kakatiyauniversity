@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+const videoSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  url: { type: String, required: true },
+});
+
 const ClassSchema = new mongoose.Schema(
   {
     title: {
@@ -10,11 +15,13 @@ const ClassSchema = new mongoose.Schema(
       type: String,
       max: 50,
     },
-    video: {
-      name: { type: String, required: true },
-      url: { type: String, required: true },
-    },
+    video: videoSchema,
     year: {
+      type: String,
+      required: true,
+      uppercase: true,
+    },
+    sem: {
       type: String,
       required: true,
       uppercase: true,
@@ -24,8 +31,27 @@ const ClassSchema = new mongoose.Schema(
       required: true,
       uppercase: true,
     },
+    subject: {
+      type: String,
+      required: true,
+      lowercase: true,
+    },
+    postedBy: {
+      uid: {
+        type: String,
+        required: true,
+        uppercase: true,
+      },
+      name: { type: String, required: true },
+      email: { type: String, required: true },
+    },
     watchedBy: {
-      type: [String],
+      type: [
+        {
+          uid: { type: String, required: true },
+          watchedPercent: { type: Number, required: true },
+        },
+      ],
       default: [],
     },
   },

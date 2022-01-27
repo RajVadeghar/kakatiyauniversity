@@ -99,7 +99,7 @@ function Profile({ userData }) {
               </div>
             )}
 
-            <Avatar src={loggedInUser && user?.img} height="40" />
+            <Avatar src={user?.img} height="40" />
 
             <div className="flex-1 flex flex-col items-start space-y-2 animate-fade-up">
               {isEditing ? (
