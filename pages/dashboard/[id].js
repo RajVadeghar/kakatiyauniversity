@@ -25,7 +25,7 @@ function VideoPage({ classLinkData }) {
   } = classLink;
 
   useEffect(() => {
-    const unsubscribe = () => {
+    const unsubscribe = async () => {
       const classLink = await getClass(router.query.id);
       setClassLink(classLink);
     };
