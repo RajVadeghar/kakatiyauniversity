@@ -42,8 +42,8 @@ function Dashboard({ classes }) {
     const queryString = "";
     queryStringArray.map((query) => (queryString = queryString + query + "&"));
 
-    const res = await getClasses(queryString);
     setIsMounted(false);
+    const res = await getClasses(queryString);
     setClassLinks(res);
     router.push(`/dashboard?${queryString}`, undefined, {
       shallow: true,
@@ -167,7 +167,7 @@ function Dashboard({ classes }) {
                 </thead>
                 <tbody>
                   {isMounted &&
-                    classLinks?.data?.map((classLink) => (
+                    classLinks.data.map((classLink) => (
                       <ClassLinkItem
                         key={classLink._id}
                         classLink={classLink}
