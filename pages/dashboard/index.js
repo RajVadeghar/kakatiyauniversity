@@ -8,8 +8,7 @@ import Navbar from "../../components/Navbar";
 import { getSemesters, getSubjects } from "../../utils/common";
 import { getClasses } from "../../utils/request";
 
-function Dashboard({ classes }) {
-  const [classLinks, setClassLinks] = useState(classes);
+function Dashboard({ classLinks }) {
   const [semesters, setSemesters] = useState([]);
   const [semester, setSemester] = useState("");
   const [subjects, setSubjects] = useState([]);
@@ -29,28 +28,6 @@ function Dashboard({ classes }) {
     return unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = async () => {
-      const queryStringArray = [];
-
-      const sub = subject.toLowerCase().split(" ").join("%20");
-
-      queryStringArray.push(branch ? `branch=${branch}` : "");
-      queryStringArray.push(semester ? `semester=${semester}` : "");
-      queryStringArray.push(subject ? `subject=${sub}` : "");
-
-      const queryString = "";
-      queryStringArray.map(
-        (query) => (queryString = queryString + query + "&")
-      );
-
-      const res = await getClasses(queryString);
-      setClassLinks(res);
-      console.log(classLinks);
-    };
-    return unsubscribe();
-  }, [router.query]);
-
   const fetchData = async () => {
     const queryStringArray = [];
 
@@ -63,11 +40,8 @@ function Dashboard({ classes }) {
     const queryString = "";
     queryStringArray.map((query) => (queryString = queryString + query + "&"));
 
-    const res = await getClasses(queryString);
-    setClassLinks(res);
-    router.push(`/dashboard?${queryString}`, undefined, {
-      shallow: true,
-    });
+    // const res = await getClasses(queryString);
+    router.push(`/dashboard?${queryString}`);
   };
 
   return (
@@ -233,6 +207,6 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: { session, classes: classLinks },
+    props: { session, classLinks },
   };
 }

@@ -20,6 +20,7 @@ export default async function handler(req, res) {
   } else if (method === "PUT") {
     try {
       const newItem = { uid: req.body.uid, watchedPercent: req.body.percent };
+
       await ClassLink.findByIdAndUpdate(
         id,
         { $pull: { watchedBy: { uid: req.body.uid } } },
@@ -28,7 +29,7 @@ export default async function handler(req, res) {
         }
       );
 
-      const classLink = await ClassLink.findByIdAndUpdate(
+      await ClassLink.findByIdAndUpdate(
         id,
         {
           $addToSet: {
@@ -39,7 +40,7 @@ export default async function handler(req, res) {
           new: true,
         }
       );
-      responseHandler(classLink, res);
+      responseHandler("Progress Updated", res);
     } catch (error) {
       errorHandler(error, res);
     }

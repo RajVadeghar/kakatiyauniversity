@@ -23,6 +23,8 @@ function VideoPage({ classLink }) {
     watchedBy,
   } = classLink;
 
+  console.log(postedBy);
+
   function userExists() {
     return watchedBy.some(function (person) {
       return person.uid === session.user.uid;
@@ -97,7 +99,7 @@ function VideoPage({ classLink }) {
               </div>
             </div>
           </div>
-          {session.user.isFaculty && (
+          {session.user.isFaculty && postedBy.uid === session.user.uid && (
             <div className="p-5 w-full flex flex-col space-y-5 max-w-screen-md mx-auto bg-white border-[0.2px] shadow-sm mt-4">
               <h1 className="text-2xl md:text-4xl text-center font-thin uppercase">
                 Watched By
