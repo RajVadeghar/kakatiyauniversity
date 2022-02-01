@@ -55,7 +55,7 @@ function Profile({ userData, userClassLinks }) {
 
     const deleteRef = ref(
       storage,
-      `images/${userData?.data.uid}/profileImg/${userData?.data.email}`
+      `images/${userData.data.uid}/profileImg/${userData.data.email}`
     );
 
     deleteObject(deleteRef)
