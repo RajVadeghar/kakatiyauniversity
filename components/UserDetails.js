@@ -36,7 +36,7 @@ function UserDetails() {
   }, [dateOfBirth]);
 
   return (
-    <div className="animate-fade-up">
+    <div className="animate-slide-up">
       <div className="flex flex-col space-y-2 mb-3">
         <p className="flex flex-col space-y-2 text-4xl font-thin">
           {name || email}{" "}

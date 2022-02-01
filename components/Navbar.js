@@ -15,7 +15,9 @@ function Navbar() {
   };
 
   return (
-    <div className={`h-20 border-b-2 shadow-md ${loading && "animate-pulse"}`}>
+    <div
+      className={`h-20 border-b-2 shadow-md ${loading && "animate-pulse"} z-50`}
+    >
       <div className="w-screen px-5 md:px-0 md:max-w-screen-2xl xl:max-w-screen-xl mx-auto flex items-center justify-between h-full">
         <div>
           <h1

@@ -1,11 +1,28 @@
 import mongoose from "mongoose";
 
-const videoSchema = new mongoose.Schema({
+const pdfSchema = new mongoose.Schema({
   name: { type: String, required: true },
   url: { type: String, required: true },
 });
 
-const ClassSchema = new mongoose.Schema(
+const imgSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  url: { type: String, required: true },
+});
+
+const submissionsSchema = new mongoose.Schema(
+  {
+    uid: { type: String },
+    img: imgSchema,
+    pdf: pdfSchema,
+    desc: { type: String, required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const AssignmentSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -15,12 +32,8 @@ const ClassSchema = new mongoose.Schema(
       type: String,
       max: 50,
     },
-    video: videoSchema,
-    year: {
-      type: String,
-      required: true,
-      uppercase: true,
-    },
+    pdf: pdfSchema,
+    img: imgSchema,
     sem: {
       type: String,
       required: true,
@@ -45,15 +58,7 @@ const ClassSchema = new mongoose.Schema(
       name: { type: String, required: true },
       email: { type: String, required: true },
     },
-    watchedBy: {
-      type: [
-        {
-          uid: { type: String },
-          watchedPercent: { type: Number },
-        },
-      ],
-      default: [],
-    },
+    submissions: [submissionsSchema],
   },
   {
     timestamps: true,
@@ -62,4 +67,4 @@ const ClassSchema = new mongoose.Schema(
 
 mongoose.models = {};
 
-export default mongoose.model("ClassLink", ClassSchema);
+export default mongoose.model("Assignment", AssignmentSchema);

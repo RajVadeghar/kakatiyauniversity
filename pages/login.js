@@ -79,7 +79,8 @@ function Login() {
           Haven't registered yet?{" "}
           <span className="link">
             <Link href="/register">Register</Link>
-          </span>{" "}
+          </span>
+          {" / "}
           <span className="link whitespace-nowrap">
             <Link href="/facultyRegister">Faculty Register</Link>
           </span>

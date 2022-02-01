@@ -14,19 +14,20 @@ module.exports = {
         Acme: ["Acme", "sans serif"],
       },
       keyframes: {
-        fade: {
+        slide: {
           "0%": { transform: "translateY(30%)", opacity: "0" },
           "100%": { transform: "translateY(0%)", opacity: "1" },
         },
       },
       animation: {
-        "fade-up": "fade 600ms ease-out 1",
+        "slide-up": "slide 600ms ease-out 1",
         "spin-slow": "spin 3s linear infinite",
       },
       backgroundImage: {
         login: "url('/login.jpg')",
         register: "url('/register.jpg')",
         addClass: "url('/addClass.jpg')",
+        addAssignment: "url('/addAssignment.jpg')",
       },
     },
   },

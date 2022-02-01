@@ -1,12 +1,14 @@
 import { errorHandler, responseHandler } from "../../../utils/common";
 import dbConnect from "../../../utils/mongo";
 import ClassLink from "../../../models/ClassLink";
+import { getSession } from "next-auth/react";
 
 export default async function handler(req, res) {
   const {
     method,
     query: { id },
   } = req;
+  const session = await getSession({ req });
 
   dbConnect();
 
@@ -17,30 +19,46 @@ export default async function handler(req, res) {
     } catch (error) {
       errorHandler(error, res);
     }
+  } else if (method === "DELETE") {
+    try {
+      if (session.user.uid === req.body.uid) {
+        await ClassLink.findByIdAndDelete(id);
+        responseHandler("Class Link Deleted", res);
+      } else {
+        errorHandler("You can only delete a class link posted by you", res);
+      }
+    } catch (error) {
+      errorHandler(error, res);
+    }
   } else if (method === "PUT") {
     try {
-      const newItem = { uid: req.body.uid, watchedPercent: req.body.percent };
+      if (req.body.percent) {
+        await ClassLink.findByIdAndUpdate(
+          id,
+          { $pull: { watchedBy: { uid: req.body.uid } } },
+          {
+            new: true,
+          }
+        );
 
-      await ClassLink.findByIdAndUpdate(
-        id,
-        { $pull: { watchedBy: { uid: req.body.uid } } },
-        {
-          new: true,
-        }
-      );
-
-      await ClassLink.findByIdAndUpdate(
-        id,
-        {
-          $addToSet: {
-            watchedBy: { uid: req.body.uid, watchedPercent: req.body.percent },
+        await ClassLink.findByIdAndUpdate(
+          id,
+          {
+            $addToSet: {
+              watchedBy: {
+                uid: req.body.uid,
+                watchedPercent: req.body.percent,
+              },
+            },
           },
-        },
-        {
-          new: true,
-        }
-      );
-      responseHandler("Progress Updated", res);
+          {
+            new: true,
+          }
+        );
+      } else if (session.user.uid === req.body.uid) {
+        await ClassLink.findByIdAndUpdate(req.body);
+      }
+      responseHandler("Class Link Updated", res);
     } catch (error) {
       errorHandler(error, res);
     }

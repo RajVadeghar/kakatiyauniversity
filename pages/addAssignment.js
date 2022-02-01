@@ -1,18 +1,18 @@
-import { VideoCameraIcon } from "@heroicons/react/outline";
+import { CameraIcon, DocumentAddIcon } from "@heroicons/react/outline";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { getSubjects } from "../utils/common";
 import { storage } from "../utils/firebase";
-import { postClass } from "../utils/request";
+import { postAssignment } from "../utils/request";
 
-function AddClass() {
+function AddAssignment() {
   const [subjectsList, setSubjectsList] = useState({});
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const [video, setVideo] = useState(null);
-  const [year, setYear] = useState("");
+  const [img, setImg] = useState(null);
+  const [pdf, setPdf] = useState(null);
   const [sem, setSem] = useState("");
   const [branch, setBranch] = useState("");
   const [subject, setSubject] = useState("");
@@ -21,9 +21,13 @@ function AddClass() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const [imgInfo, setImgInfo] = useState({ name: "", url: "" });
+  const [pdfInfo, setPdfInfo] = useState({ name: "", url: "" });
+
   const { data: session } = useSession();
 
-  const filePickerRef = useRef(null);
+  const imgPickerRef = useRef(null);
+  const pdfPickerRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = () => {
@@ -34,79 +38,109 @@ function AddClass() {
     return unsubscribe();
   }, []);
 
-  const addVideoToPost = (e) => {
+  const addImgToPost = (e) => {
     if (e.target.files[0]) {
-      setVideo(e.target.files[0]);
+      setImg(e.target.files[0]);
     }
   };
 
-  const addClassLink = (e) => {
+  const addPdfToPost = (e) => {
+    if (e.target.files[0]) {
+      setPdf(e.target.files[0]);
+    }
+  };
+
+  const addAssignment = async (e) => {
     e.preventDefault();
     if (loading) return;
     setLoading(true);
-    const videoName = video.name.trim().toLowerCase();
 
-    const videoRef = ref(
-      storage,
-      `videos/${session?.user.uid}/${sem}/${branch}/${subject}/${videoName}`
-    );
-    const uploadTask = uploadBytesResumable(videoRef, video);
+    if (img) {
+      const imgName = img.name.trim().toLowerCase();
 
-    // `videos/${session?.user.uid}/${sem}/${branch}/${subject}/${videoName}`
+      const imgRef = ref(
+        storage,
+        `AssignmentImages/${session?.user.uid}/${sem}/${branch}/${subject}/${imgName}`
+      );
+      const uploadTask = uploadBytesResumable(imgRef, img);
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const prog = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgress(prog);
-      },
-      (err) => setErrorMessage(err),
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
-          const payload = {
-            title,
-            desc,
-            video: { name: videoName, url },
-            year,
-            sem,
-            branch,
-            subject,
-            postedBy: {
-              uid: session.user.uid,
-              name: session.user.name,
-              email: session.user.email,
-            },
-          };
-          const classLink = await postClass(payload);
-          if (classLink.hasError) {
-            setErrorMessage(classLink.errorMessage);
-          } else {
-            setErrorMessage("");
-            setTitle("");
-            setDesc("");
-            setVideo(null);
-            setYear("");
-            setSem("");
-            setBranch("");
-            setSubject("");
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const prog = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(prog);
+        },
+        (err) => setErrorMessage(err),
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
+            setImgInfo({ name: imgName, url });
             setProgress(0);
-            setLoading(false);
-            router.push("/dashboard");
-          }
-        });
-      }
-    );
+          });
+        }
+      );
+    }
+    if (pdf) {
+      const pdfName = pdf.name.trim().toLowerCase();
 
+      const pdfRef = ref(
+        storage,
+        `AssignmentPdfs/${session?.user.uid}/${sem}/${branch}/${subject}/${pdfName}`
+      );
+      const uploadTask = uploadBytesResumable(pdfRef, pdf);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const prog = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(prog);
+        },
+        (err) => setErrorMessage(err),
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
+            setPdfInfo({ name: pdfName, url });
+            setProgress(0);
+          });
+        }
+      );
+    }
+
+    const payload = {
+      title,
+      desc,
+      pdf: pdfInfo,
+      img: imgInfo,
+      sem,
+      branch,
+      subject,
+    };
+
+    const assignment = await postAssignment(payload);
+    console.log(assignment);
+    if (assignment.hasError) {
+      setErrorMessage(assignment.errorMessage);
+    } else {
+      setErrorMessage("");
+      setTitle("");
+      setDesc("");
+      setImg(null);
+      setPdf(null);
+      setSem("");
+      setBranch("");
+      setSubject("");
+      setProgress(0);
+      setLoading(false);
+      router.push("/assignments");
+    }
     setLoading(false);
   };
 
   return (
-    <div className="bg-addClass bg-cover bg-center grid place-items-center min-h-screen">
+    <div className="bg-addAssignment bg-cover bg-bottom grid place-items-center min-h-screen">
       <form
         className="relative flex flex-col space-y-5 2xl:w-1/4 xl:w-1/3 md:w-1/2 mx-5 p-11 bg-white shadow-md rounded-md"
-        onSubmit={addClassLink}
+        onSubmit={addAssignment}
       >
-        <h1 className="text-center text-4xl font-thin mb-5">Add Class</h1>
+        <h1 className="text-center text-4xl font-thin mb-5">Add Assignment</h1>
         {errorMessage && (
           <p className="text-red-500 text-center capitalize font-semibold text-sm mb-5">
             {errorMessage}
@@ -138,45 +172,51 @@ function AddClass() {
         </div>
         <input
           type="file"
-          accept="video/*"
-          ref={filePickerRef}
-          onChange={addVideoToPost}
+          accept="image/*"
+          ref={imgPickerRef}
+          onChange={addImgToPost}
           hidden
         />
-        <div className="w-full">
-          {!video ? (
+        <input
+          type="file"
+          accept=".pdf"
+          ref={pdfPickerRef}
+          onChange={addPdfToPost}
+          hidden
+        />
+        <div className="w-full grid grid-cols-2">
+          {!img ? (
             <div
               tabIndex="0"
-              onKeyPress={() => filePickerRef.current.click()}
-              onClick={() => filePickerRef.current.click()}
+              onKeyPress={() => imgPickerRef.current.click()}
+              onClick={() => imgPickerRef.current.click()}
               className="grid place-items-center h-11 w-11 rounded-full bg-red-100 mx-auto cursor-pointer transition-all hover:scale-105 outline-none focus:shadow-lg focus:scale-125"
             >
               <div className="h-7 w-7">
-                <VideoCameraIcon className="h-full text-red-600" />
+                <CameraIcon className="h-full text-red-600" />
               </div>
             </div>
           ) : (
-            <div className="cursor-pointer link" onClick={() => setVideo(null)}>
-              {video.name}
+            <div className="cursor-pointer link" onClick={() => setImg(null)}>
+              {img.name}
             </div>
           )}
-        </div>
-        <div className="w-full">
-          <label htmlFor="year" className="label">
-            Year:
-          </label>
-          <select
-            className="input"
-            name="year"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
-          >
-            <option hidden value=""></option>
-            <option value="1st">1st</option>
-            <option value="2nd">2nd</option>
-            <option value="3rd">3rd</option>
-            <option value="4th">4th</option>
-          </select>
+          {!pdf ? (
+            <div
+              tabIndex="0"
+              onKeyPress={() => pdfPickerRef.current.click()}
+              onClick={() => pdfPickerRef.current.click()}
+              className="grid place-items-center h-11 w-11 rounded-full bg-red-100 mx-auto cursor-pointer transition-all hover:scale-105 outline-none focus:shadow-lg focus:scale-125"
+            >
+              <div className="h-7 w-7">
+                <DocumentAddIcon className="h-full text-red-600" />
+              </div>
+            </div>
+          ) : (
+            <div className="cursor-pointer link" onClick={() => setPdf(null)}>
+              {pdf.name}
+            </div>
+          )}
         </div>
         <div className="w-full">
           <label htmlFor="sem" className="label">
@@ -238,7 +278,7 @@ function AddClass() {
           </datalist>
         </div>
         <button className="authButton" type="submit">
-          Add Class
+          Add Assignment
         </button>
         <div className="absolute h-3 bottom-0 left-0 right-0">
           <div className="relative h-full w-full bg-gray-300">
@@ -253,7 +293,7 @@ function AddClass() {
   );
 }
 
-export default AddClass;
+export default AddAssignment;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);

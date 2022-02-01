@@ -159,7 +159,7 @@ function UserEditForm({ updateUser }) {
   return (
     <form
       onSubmit={update}
-      className="flex flex-col items-start space-y-4 w-full animate-fade-up"
+      className="flex flex-col items-start space-y-4 w-full animate-slide-up"
     >
       {values.errorMessage && (
         <p className="text center text-red-500 text-center capitalize font-semibold text-sm mb-5">

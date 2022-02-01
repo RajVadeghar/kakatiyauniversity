@@ -16,7 +16,6 @@ export default async function handler(req, res) {
   if (method === "PUT") {
     try {
       if (id === session?.user.uid || session?.user.isFaculty) {
-        console.log("hieee");
         if (req.body.password) {
           try {
             req.body.password = await bcrypt.hash(req.body.password, 8);
@@ -28,10 +27,9 @@ export default async function handler(req, res) {
         const user = await User.findOneAndUpdate({ uid: id }, req.body, {
           new: true,
         });
+
         const userDoc = await user._doc;
         delete userDoc.password;
-
-        console.log(userDoc);
 
         responseHandler(userDoc, res);
       } else {

@@ -61,9 +61,13 @@ export default async function handler(req, res) {
               ],
             },
           },
+          { $sort: { createdAt: -1 } },
         ]);
       } else {
-        classLink = await ClassLink.aggregate([{ $match: {} }]);
+        classLink = await ClassLink.aggregate([
+          { $match: {} },
+          { $sort: { createdAt: -1 } },
+        ]);
       }
 
       responseHandler(classLink, res);
@@ -74,17 +78,3 @@ export default async function handler(req, res) {
     errorHandler("Invalid request type", res);
   }
 }
-
-/* else if (branch && semester) {
-  classLink = await ClassLink.find({ branch, semester });
-} else if (branch && sub) {
-  classLink = await ClassLink.find({ branch, sub });
-} else if (semester && sub) {
-  classLink = await ClassLink.find({ semester, sub });
-} else if (branch) {
-  classLink = await ClassLink.find({ branch });
-} else if (semester) {
-  classLink = await ClassLink.find({ semester });
-} else if (sub) {
-  classLink = await ClassLink.find({ sub });
-} */

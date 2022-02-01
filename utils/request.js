@@ -87,12 +87,44 @@ export const getClass = async (id) => {
   }
 };
 
+export const getUserClassLinks = async (id) => {
+  try {
+    const res = await axios.get(`${server}/api/user/classlink/${id}`);
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};
+
 export const updateClassLink = async (payload) => {
   try {
     const res = await axios.put(
       `${server}/api/classlink/${payload.id}`,
       payload
     );
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};
+
+export const deleteClassLink = async (payload) => {
+  try {
+    const res = await axios.delete(`${server}/api/classlink/${payload.id}`, {
+      data: payload,
+    });
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};
+
+export const postAssignment = async (payload) => {
+  try {
+    const res = await axios.post(`/api/assignments`, payload);
     return res.data;
   } catch (error) {
     const errorMsg = getValue(error, ["response", "data"]);

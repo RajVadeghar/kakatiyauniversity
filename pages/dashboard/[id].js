@@ -3,12 +3,20 @@ import moment from "moment";
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import { getClass, updateClassLink } from "../../utils/request";
+import {
+  deleteClassLink,
+  getClass,
+  updateClassLink,
+} from "../../utils/request";
+import { deleteObject, ref } from "firebase/storage";
+import { storage } from "../../utils/firebase";
+import { useState } from "react";
 
 function VideoPage({ classLink }) {
   const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
   const {
     title,
@@ -22,8 +30,6 @@ function VideoPage({ classLink }) {
     createdAt,
     watchedBy,
   } = classLink;
-
-  console.log(postedBy);
 
   function userExists() {
     return watchedBy.some(function (person) {
@@ -49,6 +55,35 @@ function VideoPage({ classLink }) {
     } else {
       await updateClassLink(payload);
     }
+  };
+
+  const deleteClass = async (e) => {
+    if (loading) return;
+    setLoading(true);
+
+    const videoRef = ref(
+      storage,
+      `videos/${session?.user.uid}/${sem}/${branch}/${subject}/${video.name}`
+    );
+
+    deleteObject(videoRef)
+      .then(async () => {
+        setErrorMessage("");
+      })
+      .catch((err) => setErrorMessage(err));
+
+    const payload = { id: router.query.id, uid: postedBy.uid };
+
+    const res = await deleteClassLink(payload);
+
+    if (res.hasError) {
+      setErrorMessage(res.errorMessage);
+    } else {
+      setLoading(false);
+      router.replace("/dashboard");
+    }
+
+    setLoading(false);
   };
 
   const handleVideoEnded = () => {};
@@ -85,6 +120,16 @@ function VideoPage({ classLink }) {
                 <p className="text-xs text-gray-500">
                   {watchedBy.length} views
                 </p>
+                {session?.user.isFaculty && postedBy.uid === session.user.uid && (
+                  <button
+                    onClick={deleteClass}
+                    className={`mt-3 px-4 p-2 w-max bg-red-500 text-white uppercase text-xs md:text-sm rounded-md hover:ring-2 hover:ring-red-500 hover:bg-white hover:text-red-500 ${
+                      loading && "opacity-50"
+                    }`}
+                  >
+                    {loading ? "Deleting" : "Delete Class"}
+                  </button>
+                )}
               </div>
               <div className="flex flex-col items-end space-y-1">
                 <p className="text-[10px] md:text-xs text-gray-600 lowercase">
