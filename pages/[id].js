@@ -26,6 +26,8 @@ function Profile({ userData, userClassLinks }) {
   const [message, setMessage] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const userDataFromStore = useSelector((state) => state.userState);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -37,7 +39,7 @@ function Profile({ userData, userClassLinks }) {
 
   const router = useRouter();
 
-  const user = userData?.data;
+  const user = userDataFromStore?.data;
   const loggedInUser = session?.user.uid === user?.uid;
   const currentUser = session?.user.uid === router.query.id;
 
@@ -45,6 +47,7 @@ function Profile({ userData, userClassLinks }) {
     if (loading) return;
     setLoading(true);
     const user = await updateuser({ ...payload });
+    dispatch(update(user));
     setLoading(false);
     return user;
   };

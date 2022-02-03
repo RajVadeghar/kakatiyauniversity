@@ -39,28 +39,12 @@ export default NextAuth({
   secret: process.env.JWT_SECRET,
   callbacks: {
     async session({ session, token }) {
-      if (token && token.uid) {
-        session.user.id = token.id;
-        session.user.uid = token.uid;
-        session.user.isFaculty = token.isFaculty;
-        session.user.branch = token.branch;
-        session.user.name = token.name;
-        session.user.image = token.image;
-        session.user.dateOfJoining = token.dateOfJoining;
-        session.user.dateOfPassOut = token.dateOfPassOut;
-      }
+      session.user = token.user;
       return session;
     },
     async jwt({ token, user }) {
       if (user && user._id) {
-        token.id = user._id;
-        token.uid = user.uid;
-        token.isFaculty = user.isFaculty;
-        token.branch = user.branch;
-        token.name = user.name;
-        token.image = user.img;
-        token.dateOfJoining = user.dateOfJoining;
-        token.dateOfPassOut = user.dateOfPassOut;
+        token.user = user;
       }
       return token;
     },

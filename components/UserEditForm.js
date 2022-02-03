@@ -1,12 +1,14 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateCurrentUser } from "../redux/currentUserSlice";
 import FormInput from "./FormInput";
 
 function UserEditForm({ updateUser }) {
   const user = useSelector((state) => state.userState.data);
   if (!user) return null;
   const { data: session } = useSession();
+  const dispatch = useDispatch();
   const {
     branch,
     email,
@@ -135,20 +137,10 @@ function UserEditForm({ updateUser }) {
       setValues({ ...values, errorMessage: user.errorMessage });
     } else {
       setValues({
-        branch,
-        email,
-        uid,
-        isFaculty,
-        dateOfJoining,
-        dateOfPassOut,
-        desc,
-        dateOfBirth,
-        name,
-      });
-      setValues({
         ...values,
         successMessage: "Updated user successfully! Cheers :)",
       });
+      dispatch(updateCurrentUser(user));
     }
   };
 

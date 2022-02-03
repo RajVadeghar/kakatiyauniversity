@@ -3,10 +3,12 @@ import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import ClassLinkItem from "../../components/ClassLinkItem";
 import Navbar from "../../components/Navbar";
+import { updateCurrentUser } from "../../redux/currentUserSlice";
 import { getSemesters, getSubjects } from "../../utils/common";
-import { getClasses } from "../../utils/request";
+import { getClasses, getuser } from "../../utils/request";
 
 function Dashboard({
   classLinks,
@@ -22,11 +24,15 @@ function Dashboard({
   const [isVisible, setIsVisible] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const unsubscribe = () => {
+    const unsubscribe = async () => {
       const res = getSemesters();
       const subres = getSubjects();
+      const currentUser = await getuser(session?.user.uid);
+      dispatch(updateCurrentUser(currentUser));
+
       setSemesters(res);
       setSubjects(subres);
     };

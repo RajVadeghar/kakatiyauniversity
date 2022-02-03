@@ -6,6 +6,7 @@ import { storage } from "../utils/firebase";
 import { updateuser } from "../utils/request";
 import { useDispatch, useSelector } from "react-redux";
 import { toggle } from "../redux/modalSlice";
+import { update } from "../redux/userSlice";
 
 function Modal() {
   const isOpen = useSelector((state) => state.modalState.isOpen);
@@ -20,6 +21,8 @@ function Modal() {
 
   const cancelButtonRef = useRef(null);
   const filePickerRef = useRef(null);
+
+  console.log(isOpen && user.data.email);
 
   const addImageToPost = (e) => {
     const reader = new FileReader();
@@ -38,10 +41,11 @@ function Modal() {
     if (!selectedFile) return;
 
     setLoading(true);
+    setProgress(0);
 
     const imageRef = ref(
       storage,
-      `images/${user?.uid}/profileImg/${user?.email}`
+      `images/${user.data.uid}/profileImg/${user.data.email}`
     );
     const uploadTask = uploadBytesResumable(imageRef, uploadFile);
 
@@ -54,16 +58,22 @@ function Modal() {
       (err) => setErrorMessage(err),
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
-          const user = await updateuser({ uid: userData.data.uid, img: url });
-          setUserData(user);
+          const updatedUser = await updateuser({
+            uid: user.data.uid,
+            img: url,
+          });
+          dispatch(update(updatedUser));
+          setLoading(false);
+          setSelectedFile(null);
+          setProgress(0);
         });
       }
     );
 
-    setProgress(0);
     setLoading(false);
     setSelectedFile(null);
-    setOpen(false);
+    setProgress(0);
+    dispatch(toggle());
   };
 
   return (
