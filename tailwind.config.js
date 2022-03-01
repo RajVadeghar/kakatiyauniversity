@@ -28,6 +28,7 @@ module.exports = {
         register: "url('/register.jpg')",
         addClass: "url('/addClass.jpg')",
         addAssignment: "url('/addAssignment.jpg')",
+        submitAssignment: "url('/submitAssignment.jpg')",
       },
     },
   },

@@ -22,8 +22,6 @@ function Modal() {
   const cancelButtonRef = useRef(null);
   const filePickerRef = useRef(null);
 
-  console.log(isOpen && user.data.email);
-
   const addImageToPost = (e) => {
     const reader = new FileReader();
     if (e.target.files[0]) {

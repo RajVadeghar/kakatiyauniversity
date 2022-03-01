@@ -8,10 +8,7 @@ import {
 import dbConnect from "../../../utils/mongo";
 
 export default async function handler(req, res) {
-  const {
-    method,
-    query: { branch, semester, subject },
-  } = req;
+  const { method } = req;
   const session = await getSession({ req });
 
   dbConnect();
@@ -19,7 +16,7 @@ export default async function handler(req, res) {
   if (method === "POST") {
     try {
       if (session?.user.isFaculty) {
-        const { title, desc, year, branch, subject } = req.body;
+        const { title, desc, sem, branch, subject } = req.body;
         validateAllOnce({
           title,
           desc,
@@ -39,7 +36,10 @@ export default async function handler(req, res) {
     }
   } else if (method === "GET") {
     try {
-      const assignments = await Assignment.aggregate([{ $match: {} }]);
+      const assignments = await Assignment.aggregate([
+        { $match: {} },
+        { $sort: { createdAt: -1 } },
+      ]);
       responseHandler(assignments, res);
     } catch (error) {
       errorHandler(error, res);

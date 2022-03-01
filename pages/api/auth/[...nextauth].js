@@ -4,6 +4,8 @@ import User from "../../../models/User";
 import dbConnect from "../../../utils/mongo";
 import bcrypt from "bcrypt";
 import { validateAllOnce } from "../../../utils/common";
+// import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import clientPromise from "../../../lib/mongo";
 
 export default NextAuth({
   providers: [
@@ -38,7 +40,7 @@ export default NextAuth({
   ],
   secret: process.env.JWT_SECRET,
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token, user }) {
       session.user = token.user;
       return session;
     },
@@ -51,5 +53,16 @@ export default NextAuth({
   },
   session: {
     strategy: "jwt",
+  },
+  logger: {
+    error(code, metadata) {
+      console.error(code, metadata);
+    },
+    warn(code) {
+      console.warn(code);
+    },
+    debug(code, metadata) {
+      console.debug(code, metadata);
+    },
   },
 });

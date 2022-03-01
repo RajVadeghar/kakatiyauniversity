@@ -3,12 +3,10 @@ import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import ClassLinkItem from "../../components/ClassLinkItem";
 import Navbar from "../../components/Navbar";
-import { updateCurrentUser } from "../../redux/currentUserSlice";
 import { getSemesters, getSubjects } from "../../utils/common";
-import { getClasses, getuser } from "../../utils/request";
+import { getClasses } from "../../utils/request";
 
 function Dashboard({
   classLinks,
@@ -24,14 +22,11 @@ function Dashboard({
   const [isVisible, setIsVisible] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribe = async () => {
       const res = getSemesters();
       const subres = getSubjects();
-      const currentUser = await getuser(session?.user.uid);
-      dispatch(updateCurrentUser(currentUser));
 
       setSemesters(res);
       setSubjects(subres);
@@ -152,7 +147,7 @@ function Dashboard({
             <div className="flex-1">
               {session?.user.isFaculty && (
                 <div
-                  onClick={() => router.push("/addClass")}
+                  onClick={() => router.push("/dashboard/addClass")}
                   className="grid place-items-center p-4 w-full bg-white max-w-screen-md mx-auto border-[0.2px] shadow-sm mb-4 rounded-lg cursor-pointer group"
                 >
                   <div className="grid place-items-center h-16 w-16 bg-red-100 rounded-full group-hover:scale-105">

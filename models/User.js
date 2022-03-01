@@ -4,7 +4,6 @@ const UserSchema = new mongoose.Schema(
   {
     uid: {
       type: String,
-      index: true,
       unique: true,
       required: true,
       uppercase: true,
@@ -24,7 +23,6 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      index: true,
       lowercase: true,
     },
     password: {

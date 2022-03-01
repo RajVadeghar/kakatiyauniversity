@@ -15,6 +15,7 @@ import { useState } from "react";
 
 function VideoPage({ classLink }) {
   const { data: session } = useSession();
+
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();

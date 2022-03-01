@@ -15,7 +15,7 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const createUser = async (e) => {
+  const registerUser = async (e) => {
     e.preventDefault();
 
     const payload = {
@@ -52,7 +52,7 @@ function Register() {
       </Head>
       <form
         className="flex flex-col space-y-5 2xl:w-1/4 xl:w-1/3 md:w-1/2 mx-5 p-11 bg-white shadow-md rounded-md"
-        onSubmit={createUser}
+        onSubmit={registerUser}
       >
         <h1 className="text-center text-4xl font-thin mb-5">Register</h1>
         {errorMessage && (

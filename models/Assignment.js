@@ -10,7 +10,7 @@ const imgSchema = new mongoose.Schema({
   url: { type: String, required: true },
 });
 
-const submissionsSchema = new mongoose.Schema(
+const SubmissionSchema = new mongoose.Schema(
   {
     uid: { type: String },
     img: imgSchema,
@@ -58,7 +58,7 @@ const AssignmentSchema = new mongoose.Schema(
       name: { type: String, required: true },
       email: { type: String, required: true },
     },
-    submissions: [submissionsSchema],
+    submissions: [SubmissionSchema],
   },
   {
     timestamps: true,
@@ -66,5 +66,7 @@ const AssignmentSchema = new mongoose.Schema(
 );
 
 mongoose.models = {};
+
+export const Submission = mongoose.model("Submission", SubmissionSchema);
 
 export default mongoose.model("Assignment", AssignmentSchema);

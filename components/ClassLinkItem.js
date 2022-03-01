@@ -1,4 +1,3 @@
-import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import TimeAgo from "timeago-react";

@@ -122,9 +122,54 @@ export const deleteClassLink = async (payload) => {
   }
 };
 
+export const getAssignments = async () => {
+  try {
+    const res = await axios.get(`${server}/api/assignments`);
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};
+
+export const getAssignment = async (id) => {
+  try {
+    const res = await axios.get(`${server}/api/assignments/${id}`);
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};
+
 export const postAssignment = async (payload) => {
   try {
     const res = await axios.post(`/api/assignments`, payload);
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};
+
+export const updateAssignment = async (payload) => {
+  try {
+    const res = await axios.put(
+      `${server}/api/assignments/${payload.id}`,
+      payload
+    );
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};
+
+export const deleteAssignment = async (payload) => {
+  try {
+    const res = await axios.delete(`${server}/api/assignments/${payload.id}`, {
+      data: payload,
+    });
     return res.data;
   } catch (error) {
     const errorMsg = getValue(error, ["response", "data"]);

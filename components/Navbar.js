@@ -2,13 +2,11 @@ import { signOut, useSession } from "next-auth/react";
 import { LogoutIcon, UserCircleIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
 function Navbar() {
   const { data: session } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const currentUser = useSelector((state) => state.currentUserState);
 
   const logout = async () => {
     setLoading(true);
@@ -23,11 +21,11 @@ function Navbar() {
       <div className="w-screen px-5 md:px-0 md:max-w-screen-2xl xl:max-w-screen-xl mx-auto flex items-center justify-between h-full">
         <div>
           <h1
-            onClick={() => router.push(`/${currentUser.data.uid}`)}
+            onClick={() => router.push(`/${session?.user.uid}`)}
             className="hidden md:inline-block font-Dongle text-4xl before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-indigo-500 relative hover:cursor-pointer"
           >
             <span className="relative text-white font-bold">
-              Hieee, {currentUser.data.name || currentUser.data.uid || ""}
+              Hieee, {session?.user.name || session?.user.uid || ""}
             </span>
           </h1>
         </div>
@@ -49,16 +47,16 @@ function Navbar() {
             Class Links
           </li>
           <li
-            onClick={() => router.push(`/${currentUser.data.uid}`)}
+            onClick={() => router.push(`/${session.user.uid}`)}
             className={`link text-slate-800 ${
               router.pathname === "/profile" && "active"
             }`}
           >
             <div className="h-11 w-11 rounded-full overflow-hidden">
-              {currentUser.data.img ? (
+              {session.user.img ? (
                 <img
                   className="h-full object-cover object-center rounded-full brightness-110"
-                  src={currentUser.data.img}
+                  src={session.user.img}
                 />
               ) : (
                 <UserCircleIcon className="h-full" />

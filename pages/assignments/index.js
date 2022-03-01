@@ -1,11 +1,12 @@
 import { PlusIcon } from "@heroicons/react/outline";
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
-import AssignmentItem from "../components/AssignmentItem";
-import Navbar from "../components/Navbar";
+import AssignmentItem from "../../components/AssignmentItem";
+import Navbar from "../../components/Navbar";
 import { useRouter } from "next/router";
+import { getAssignments } from "../../utils/request";
 
-function Assignments() {
+function Assignments({ assignments }) {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -20,7 +21,7 @@ function Assignments() {
         <section className="py-2 w-full">
           {session?.user.isFaculty && (
             <div
-              onClick={() => router.push("/addAssignment")}
+              onClick={() => router.push("/assignments/addAssignment")}
               className="grid place-items-center p-4 w-full bg-white max-w-screen-md mx-auto border-[0.2px] shadow-sm mb-4 rounded-lg cursor-pointer group"
             >
               <div className="grid place-items-center h-16 w-16 bg-red-100 rounded-full group-hover:scale-105">
@@ -31,8 +32,8 @@ function Assignments() {
             </div>
           )}
           <ul className="p-5 w-full flex flex-col max-w-screen-md mx-auto bg-white border-[0.2px] shadow-sm">
-            {Array.from(Array(5), (_, i) => (
-              <AssignmentItem key={i} />
+            {assignments.data.map((assignment) => (
+              <AssignmentItem key={assignment._id} assignment={assignment} />
             ))}
           </ul>
         </section>
@@ -46,6 +47,8 @@ export default Assignments;
 export async function getServerSideProps(context) {
   const session = await getSession(context);
 
+  const assignments = await getAssignments();
+
   if (!session) {
     return {
       redirect: {
@@ -56,6 +59,6 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: { session },
+    props: { session, assignments },
   };
 }
