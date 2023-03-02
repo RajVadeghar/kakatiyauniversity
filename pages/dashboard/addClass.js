@@ -73,7 +73,7 @@ function AddClass() {
             subject,
             postedBy: {
               uid: session.user.uid,
-              name: session.user.name,
+              name: session.user?.name || `${subject} professor`,
               email: session.user.email,
             },
           };

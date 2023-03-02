@@ -60,12 +60,14 @@ function AddAssignment() {
       subject,
       postedBy: {
         uid: session.user.uid,
-        name: session.user.name,
+        name: session.user?.name || `${subject} professor`,
         email: session.user.email,
       },
     };
 
     const assignment = await postAssignment(payload);
+
+    console.log(assignment);
 
     if (img) {
       const imgName = img.name.trim().toLowerCase();
@@ -123,7 +125,9 @@ function AddAssignment() {
     }
 
     if (assignment.hasError) {
-      setErrorMessage(assignment.errorMessage);
+      typeof assignment.errorMessage === "string"
+        ? setErrorMessage(assignment.errorMessage)
+        : setErrorMessage("Something went wrong");
     } else {
       setErrorMessage("");
       setTitle("");
@@ -308,15 +312,6 @@ export async function getServerSideProps(context) {
     return {
       redirect: {
         destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  if (!session.user.isFacuty) {
-    return {
-      redirect: {
-        destination: "/assignments",
         permanent: false,
       },
     };

@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { update } from "../redux/userSlice";
 import FormInput from "./FormInput";
 
 function UserEditForm({ updateUser }) {
@@ -102,7 +103,7 @@ function UserEditForm({ updateUser }) {
     },
   ];
 
-  const update = async (e) => {
+  const submitUpdate = async (e) => {
     e.preventDefault();
 
     const {
@@ -138,7 +139,7 @@ function UserEditForm({ updateUser }) {
         ...values,
         successMessage: "Updated user successfully! Cheers :)",
       });
-      dispatch(updateCurrentUser(user));
+      dispatch(update(user));
     }
   };
 
@@ -148,7 +149,7 @@ function UserEditForm({ updateUser }) {
 
   return (
     <form
-      onSubmit={update}
+      onSubmit={submitUpdate}
       className="flex flex-col items-start space-y-4 w-full animate-slide-up"
     >
       {values.errorMessage && (

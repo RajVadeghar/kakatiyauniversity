@@ -53,10 +53,10 @@ function Navbar() {
             }`}
           >
             <div className="h-11 w-11 rounded-full overflow-hidden">
-              {session.user.img ? (
+              {session?.user.img ? (
                 <img
                   className="h-full object-cover object-center rounded-full brightness-110"
-                  src={session.user.img}
+                  src={session?.user.img}
                 />
               ) : (
                 <UserCircleIcon className="h-full" />

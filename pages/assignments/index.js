@@ -32,9 +32,15 @@ function Assignments({ assignments }) {
             </div>
           )}
           <ul className="p-5 w-full flex flex-col max-w-screen-md mx-auto bg-white border-[0.2px] shadow-sm">
-            {assignments.data.map((assignment) => (
-              <AssignmentItem key={assignment._id} assignment={assignment} />
-            ))}
+            {assignments.data.length > 0 ? (
+              assignments.data.map((assignment) => (
+                <AssignmentItem key={assignment._id} assignment={assignment} />
+              ))
+            ) : (
+              <li className="p-5 text-3xl font-medium w-full text-center">
+                No Assignments Found
+              </li>
+            )}
           </ul>
         </section>
       </div>

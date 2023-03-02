@@ -16,7 +16,7 @@ function SubmitAssignment() {
   const [pdf, setPdf] = useState(null);
 
   const [progress, setProgress] = useState(0);
-  const [errorMessage, setErrorMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -50,7 +50,10 @@ function SubmitAssignment() {
     const submission = await updateAssignment(payload);
 
     if (submission.hasError) {
-      setErrorMessage(submission.errorMessage);
+      console.log(submission.errorMessage);
+      typeof submission.errorMessage === "string"
+        ? setErrorMessage(submission.errorMessage)
+        : setErrorMessage("Something went wrong");
     } else {
       if (img) {
         const imgName = img.name.trim().toLowerCase();
@@ -113,7 +116,10 @@ function SubmitAssignment() {
       const payload = { id: router.query.id, submitId: submission.data._id };
       const assignment = updateAssignment(payload);
       if (assignment.hasError) {
-        setErrorMessage(assignment.errorMessage);
+        console.log(assignment.errorMessage);
+        typeof assignment.errorMessage === "string"
+          ? setErrorMessage(assignment.errorMessage)
+          : setErrorMessage("Something went wrong");
       } else {
         setErrorMessage("");
         setDesc("");
