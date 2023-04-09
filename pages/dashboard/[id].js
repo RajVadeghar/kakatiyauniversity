@@ -121,16 +121,18 @@ function VideoPage({ classLink }) {
                 <p className="text-xs text-gray-500">
                   {watchedBy.length} views
                 </p>
-                {session?.user.isFaculty && postedBy.uid === session.user.uid && (
-                  <button
-                    onClick={deleteClass}
-                    className={`mt-3 px-4 p-2 w-max bg-red-500 text-white uppercase text-xs md:text-sm rounded-md hover:ring-2 hover:ring-red-500 hover:bg-white hover:text-red-500 ${
-                      loading && "opacity-50"
-                    }`}
-                  >
-                    {loading ? "Deleting" : "Delete Class"}
-                  </button>
-                )}
+                {(session.user.role === UserRole.Admin ||
+                  session.user.role === UserRole.Faculty) &&
+                  postedBy.uid === session.user.uid && (
+                    <button
+                      onClick={deleteClass}
+                      className={`mt-3 px-4 p-2 w-max bg-red-500 text-white uppercase text-xs md:text-sm rounded-md hover:ring-2 hover:ring-red-500 hover:bg-white hover:text-red-500 ${
+                        loading && "opacity-50"
+                      }`}
+                    >
+                      {loading ? "Deleting" : "Delete Class"}
+                    </button>
+                  )}
               </div>
               <div className="flex flex-col items-end space-y-1">
                 <p className="text-[10px] md:text-xs text-gray-600 lowercase">
@@ -145,42 +147,44 @@ function VideoPage({ classLink }) {
               </div>
             </div>
           </div>
-          {session.user.isFaculty && postedBy.uid === session.user.uid && (
-            <div className="p-5 w-full flex flex-col space-y-5 max-w-screen-md mx-auto bg-white border-[0.2px] shadow-sm mt-4">
-              <h1 className="text-2xl md:text-4xl text-center font-thin uppercase">
-                Watched By
-              </h1>
-              <div className="input flex gap-x-5 mx-auto">
-                <div className="h-7 w-7">
-                  <SearchIcon className="h-full w-full text-gray-400" />
+          {(session.user.role === UserRole.Admin ||
+            session.user.role === UserRole.Faculty) &&
+            postedBy.uid === session.user.uid && (
+              <div className="p-5 w-full flex flex-col space-y-5 max-w-screen-md mx-auto bg-white border-[0.2px] shadow-sm mt-4">
+                <h1 className="text-2xl md:text-4xl text-center font-thin uppercase">
+                  Watched By
+                </h1>
+                <div className="input flex gap-x-5 mx-auto">
+                  <div className="h-7 w-7">
+                    <SearchIcon className="h-full w-full text-gray-400" />
+                  </div>
+                  <input
+                    className="w-full outline-none"
+                    type="text"
+                    placeholder="Enter roll number"
+                  />
                 </div>
-                <input
-                  className="w-full outline-none"
-                  type="text"
-                  placeholder="Enter roll number"
-                />
-              </div>
-              <table className="table-auto mx-auto bg-white border-[0.2px] shadow-sm w-full max-w-screen-md">
-                <thead>
-                  <tr className="p-5 grid grid-cols-2 justify-items-start w-full bg-gray-100 text-xs md:text-base">
-                    <th>Roll No</th>
-                    <th>Watched Percentage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {watchedBy.map((user, i) => (
-                    <tr
-                      key={i}
-                      className="p-5 grid grid-cols-2 justify-items-start w-full text-xs md:text-base"
-                    >
-                      <td className="col-span-1">{user.uid}</td>
-                      <td className="col-span-1">{user.watchedPercent}%</td>
+                <table className="table-auto mx-auto bg-white border-[0.2px] shadow-sm w-full max-w-screen-md">
+                  <thead>
+                    <tr className="p-5 grid grid-cols-2 justify-items-start w-full bg-gray-100 text-xs md:text-base">
+                      <th>Roll No</th>
+                      <th>Watched Percentage</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody>
+                    {watchedBy.map((user, i) => (
+                      <tr
+                        key={i}
+                        className="p-5 grid grid-cols-2 justify-items-start w-full text-xs md:text-base"
+                      >
+                        <td className="col-span-1">{user.uid}</td>
+                        <td className="col-span-1">{user.watchedPercent}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
         </section>
       </div>
     </div>

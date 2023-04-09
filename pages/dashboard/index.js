@@ -7,6 +7,7 @@ import ClassLinkItem from "../../components/ClassLinkItem";
 import Navbar from "../../components/Navbar";
 import { getSemesters, getSubjects } from "../../utils/common";
 import { getClasses } from "../../utils/request";
+import { UserRole } from "../../models/User";
 
 function Dashboard({
   classLinks,
@@ -145,7 +146,8 @@ function Dashboard({
               </button>
             </div>
             <div className="flex-1">
-              {session?.user.isFaculty && (
+              {(session.user.role === UserRole.Admin ||
+                session.user.role === UserRole.Faculty) && (
                 <div
                   onClick={() => router.push("/dashboard/addClass")}
                   className="grid place-items-center p-4 w-full bg-white max-w-screen-md mx-auto border-[0.2px] shadow-sm mb-4 rounded-lg cursor-pointer group"

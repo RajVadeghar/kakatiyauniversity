@@ -1,20 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { UserRole } from "../models/User";
 
 function UserDetails() {
   const user = useSelector((state) => state.userState.data);
   if (!user) return;
   const [dob, setDob] = useState(null);
-  const {
-    branch,
-    email,
-    uid,
-    isFaculty,
-    dateOfPassOut,
-    desc,
-    dateOfBirth,
-    name,
-  } = user;
+  const { branch, email, uid, role, dateOfPassOut, desc, dateOfBirth, name } =
+    user;
 
   const [currentYear, setCurrentYear] = useState(null);
 
@@ -41,7 +34,15 @@ function UserDetails() {
         <p className="flex flex-col space-y-2 text-4xl font-thin">
           {name || email}{" "}
           <span className="text-xs font-normal">
-            ({isFaculty ? "Faculty account" : "Student account"})
+            (
+            {role === UserRole.Admin
+              ? "Admin account"
+              : role === UserRole.Faculty
+              ? "Faculty account"
+              : role === UserRole.Guest
+              ? "Guest account"
+              : "Student account"}
+            )
           </span>
         </p>
         <p className="text-gray-500 font-Dongle text-2xl"> {desc}</p>
@@ -54,7 +55,7 @@ function UserDetails() {
         <span className="text-sm font-semibold text-gray-600">Roll No:</span>{" "}
         {uid}
       </p>
-      {!isFaculty && (
+      {role === UserRole.Student && (
         <p className="uppercase">
           <span className="text-sm font-semibold text-gray-600">
             Current Year:

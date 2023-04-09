@@ -11,7 +11,7 @@ export const userSlice = createSlice({
       dateOfJoining: "",
       dateOfPassOut: "",
       email: "",
-      isFaculty: false,
+      role: null,
       dateOfBirth: "",
       name: "",
       img: "",

@@ -50,7 +50,6 @@ function SubmitAssignment() {
     const submission = await updateAssignment(payload);
 
     if (submission.hasError) {
-      console.log(submission.errorMessage);
       typeof submission.errorMessage === "string"
         ? setErrorMessage(submission.errorMessage)
         : setErrorMessage("Something went wrong");
@@ -116,7 +115,6 @@ function SubmitAssignment() {
       const payload = { id: router.query.id, submitId: submission.data._id };
       const assignment = updateAssignment(payload);
       if (assignment.hasError) {
-        console.log(assignment.errorMessage);
         typeof assignment.errorMessage === "string"
           ? setErrorMessage(assignment.errorMessage)
           : setErrorMessage("Something went wrong");

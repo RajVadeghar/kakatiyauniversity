@@ -39,7 +39,6 @@ export default async function handler(req, res) {
           },
         });
 
-        console.log(submission);
         responseHandler(submission, res);
       } else if (req.body.submitId) {
         const payload = req.body;
@@ -52,8 +51,6 @@ export default async function handler(req, res) {
           req.body.submitId,
           payload
         );
-
-        console.log(submission);
 
         // FIXME: not updating properly. CHeck submission id from above if statement at client side
         /*  const submission = await Assignment.updateOne(

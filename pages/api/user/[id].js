@@ -1,4 +1,4 @@
-import User from "../../../models/User";
+import User, { UserRole } from "../../../models/User";
 import { errorHandler, responseHandler } from "../../../utils/common";
 import dbConnect from "../../../utils/mongo";
 import bcrypt from "bcrypt";
@@ -15,7 +15,11 @@ export default async function handler(req, res) {
 
   if (method === "PUT") {
     try {
-      if (id === session?.user.uid || session?.user.isFaculty) {
+      if (
+        id === session?.user.uid ||
+        session?.user.role === UserRole.Admin ||
+        session?.user.role === UserRole.Faculty
+      ) {
         if (req.body.password) {
           try {
             req.body.password = await bcrypt.hash(req.body.password, 8);
@@ -50,11 +54,14 @@ export default async function handler(req, res) {
     }
   } else if (method === "DELETE") {
     try {
-      if (session.user.isFaculty) {
+      if (
+        session.user.role === UserRole.Admin ||
+        session.user.role === UserRole.Faculty
+      ) {
         const user = await User.deleteOne({ uid: id });
         responseHandler("Account has been deleted successfully", res);
       } else {
-        return errorHandler("only faculty can delete accounts", res);
+        return errorHandler("only faculty or admin can delete accounts", res);
       }
     } catch (error) {
       errorHandler(error, res);

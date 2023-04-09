@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { update } from "../redux/userSlice";
 import FormInput from "./FormInput";
+import { UserRole } from "../models/User";
 
 function UserEditForm({ updateUser }) {
   const user = useSelector((state) => state.userState.data);
@@ -12,7 +13,7 @@ function UserEditForm({ updateUser }) {
     branch,
     email,
     uid,
-    isFaculty,
+    role,
     dateOfJoining,
     dateOfPassOut,
     desc,
@@ -24,7 +25,7 @@ function UserEditForm({ updateUser }) {
     branch,
     email,
     uid,
-    isFaculty,
+    role,
     dateOfJoining,
     dateOfPassOut,
     desc,
@@ -41,7 +42,11 @@ function UserEditForm({ updateUser }) {
       type: "email",
       placeholder: "Your Email",
       label: "email",
-      isEditable: session.user.isFaculty ? true : false,
+      isEditable:
+        session.user.role === UserRole.Admin ||
+        session.user.role === UserRole.Faculty
+          ? true
+          : false,
     },
     {
       id: 2,
@@ -49,7 +54,11 @@ function UserEditForm({ updateUser }) {
       type: "text",
       placeholder: "Your Branch",
       label: "branch",
-      isEditable: session.user.isFaculty ? true : false,
+      isEditable:
+        session.user.role === UserRole.Admin ||
+        session.user.role === UserRole.Faculty
+          ? true
+          : false,
     },
     {
       id: 3,
@@ -58,7 +67,11 @@ function UserEditForm({ updateUser }) {
       placeholder: "Date Joined",
       label: "Date Joined",
       min: "2000",
-      isEditable: session.user.isFaculty ? true : false,
+      isEditable:
+        session.user.role === UserRole.Admin ||
+        session.user.role === UserRole.Faculty
+          ? true
+          : false,
     },
     {
       id: 4,
@@ -67,7 +80,11 @@ function UserEditForm({ updateUser }) {
       placeholder: "Date of passout",
       label: "Date of passout",
       min: "2000",
-      isEditable: session.user.isFaculty ? true : false,
+      isEditable:
+        session.user.role === UserRole.Admin ||
+        session.user.role === UserRole.Faculty
+          ? true
+          : false,
     },
     {
       id: 5,
@@ -75,7 +92,11 @@ function UserEditForm({ updateUser }) {
       type: "text",
       placeholder: "Your Roll Number",
       label: "Roll Number",
-      isEditable: session.user.isFaculty ? true : false,
+      isEditable:
+        session.user.role === UserRole.Admin ||
+        session.user.role === UserRole.Faculty
+          ? true
+          : false,
     },
     {
       id: 6,
@@ -110,7 +131,7 @@ function UserEditForm({ updateUser }) {
       branch,
       email,
       uid,
-      isFaculty,
+      role,
       dateOfJoining,
       dateOfPassOut,
       desc,
@@ -122,7 +143,7 @@ function UserEditForm({ updateUser }) {
       branch,
       email,
       uid,
-      isFaculty,
+      role,
       dateOfJoining,
       dateOfPassOut,
       desc,
@@ -168,7 +189,7 @@ function UserEditForm({ updateUser }) {
           {...input}
           value={values[input.name]}
           onChange={onChange}
-          isFaculty={isFaculty}
+          role={role}
         />
       ))}
 

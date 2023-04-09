@@ -67,8 +67,6 @@ function AddAssignment() {
 
     const assignment = await postAssignment(payload);
 
-    console.log(assignment);
-
     if (img) {
       const imgName = img.name.trim().toLowerCase();
 

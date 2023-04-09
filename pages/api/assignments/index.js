@@ -15,7 +15,10 @@ export default async function handler(req, res) {
 
   if (method === "POST") {
     try {
-      if (session?.user.isFaculty) {
+      if (
+        session.user.role === UserRole.Admin ||
+        session.user.role === UserRole.Faculty
+      ) {
         const { title, desc, sem, branch, subject } = req.body;
         validateAllOnce({
           title,
@@ -29,7 +32,7 @@ export default async function handler(req, res) {
 
         responseHandler(assignment, res);
       } else {
-        errorHandler("Only faculty can create assignments", res);
+        errorHandler("Only faculty or admin can create assignments", res);
       }
     } catch (error) {
       errorHandler(error, res);

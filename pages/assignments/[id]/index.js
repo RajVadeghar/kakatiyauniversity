@@ -117,7 +117,8 @@ function Assignment({ assignment }) {
                   <p className="text-xs text-gray-500">
                     {submissions.length} submissions
                   </p>
-                  {session?.user.isFaculty ? (
+                  {session.user.role === UserRole.Admin ||
+                  session.user.role === UserRole.Faculty ? (
                     postedBy.uid === session.user.uid && (
                       <button
                         onClick={deleteAssignment}

@@ -5,6 +5,7 @@ import AssignmentItem from "../../components/AssignmentItem";
 import Navbar from "../../components/Navbar";
 import { useRouter } from "next/router";
 import { getAssignments } from "../../utils/request";
+import { UserRole } from "../../models/User";
 
 function Assignments({ assignments }) {
   const { data: session } = useSession();
@@ -19,7 +20,8 @@ function Assignments({ assignments }) {
       <Navbar />
       <div className="w-screen px-2 md:px-0 md:max-w-screen-2xl xl:max-w-screen-xl mx-auto flex items-center justify-between h-full  animate-slide-up">
         <section className="py-2 w-full">
-          {session?.user.isFaculty && (
+          {(session.user.role === UserRole.Admin ||
+            session.user.role === UserRole.Faculty) && (
             <div
               onClick={() => router.push("/assignments/addAssignment")}
               className="grid place-items-center p-4 w-full bg-white max-w-screen-md mx-auto border-[0.2px] shadow-sm mb-4 rounded-lg cursor-pointer group"

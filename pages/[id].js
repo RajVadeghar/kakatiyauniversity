@@ -15,16 +15,25 @@ import { update } from "../redux/userSlice";
 import { storage } from "../utils/firebase";
 import {
   deleteuser,
+  getUnapprovedFacultyDetails,
   getuser,
   getUserClassLinks,
   updateuser,
 } from "../utils/request";
+import { UserRole } from "../models/User";
 
-function Profile({ userData, userClassLinks }) {
+function Profile({
+  userData,
+  userClassLinks,
+  unapprovedFacultyDetails: unapproved,
+}) {
   const { data: session } = useSession();
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [unapprovedFacultyDetails, setUnapprovedFacultyDetails] = useState(() =>
+    unapproved?.data?.length > 0 ? unapproved.data : null
+  );
 
   const userDataFromStore = useSelector((state) => state.userState);
 
@@ -96,7 +105,9 @@ function Profile({ userData, userClassLinks }) {
               </p>
             )}
 
-            {(loggedInUser || session?.user.isFaculty) && (
+            {(loggedInUser ||
+              session.user.role === UserRole.Admin ||
+              session.user.role === UserRole.Faculty) && (
               <div
                 onClick={() => setIsEditing((val) => !val)}
                 className="absolute top-3 right-3 h-7 font-bold text-gray-400 cursor-pointer"
@@ -127,54 +138,121 @@ function Profile({ userData, userClassLinks }) {
                   </button>
                 )}
 
-                {!isEditing && session?.user.isFaculty && (
-                  <button
-                    onClick={() => deleteUser(user.uid)}
-                    className="px-3 p-2 bg-red-500 text-white uppercase text-sm rounded-md hover:ring-2 hover:ring-red-500 hover:bg-white hover:text-red-500 animate-slide-up"
-                  >
-                    Delete User
-                  </button>
-                )}
+                {!isEditing &&
+                  (session.user.role === UserRole.Admin ||
+                    session.user.role === UserRole.Faculty) && (
+                    <button
+                      onClick={() => deleteUser(user.uid)}
+                      className="px-3 p-2 bg-red-500 text-white uppercase text-sm rounded-md hover:ring-2 hover:ring-red-500 hover:bg-white hover:text-red-500 animate-slide-up"
+                    >
+                      Delete User
+                    </button>
+                  )}
               </div>
             </div>
           </section>
 
-          {session.user.isFaculty && !isEditing && currentUser && (
-            <div className="animate-slide-up">
-              <p className="my-10 text-xl font-medium w-full max-w-screen-md mx-auto">
-                Posted By You:
-              </p>
+          {session.user.role === UserRole.Faculty &&
+            !isEditing &&
+            currentUser && (
+              <div className="animate-slide-up">
+                <p className="my-10 text-xl font-medium w-full max-w-screen-md mx-auto">
+                  Posted By You:
+                </p>
 
-              <table className="table-auto mx-auto bg-white border-[0.2px] shadow-sm w-full max-w-screen-md">
-                <thead>
-                  <tr className="p-5 grid grid-cols-8 md:grid-cols-9 justify-items-start w-full bg-gray-100 text-xs md:text-base">
-                    <th className="capitalize col-span-3">Title</th>
-                    <th className="capitalize col-span-1">sem</th>
-                    <th className="capitalize col-span-1">branch</th>
-                    <th className="capitalize col-span-1">subject</th>
-                    <th className="capitalize col-span-1 md:col-span-2">
-                      postedBy
-                    </th>
-                    <th className="capitalize col-span-1">createdAt</th>
-                  </tr>
-                </thead>
-                <tbody className="">
-                  {userClassLinks.data.length > 0 ? (
-                    userClassLinks?.data?.map((classLink) => (
-                      <ClassLinkItem
-                        key={classLink._id}
-                        classLink={classLink}
-                      />
-                    ))
-                  ) : (
-                    <tr className="p-5 grid place-items-center w-full text-xs md:text-base">
-                      <td className="text-3xl font-medium">No Classes Found</td>
+                <table className="table-auto mx-auto bg-white border-[0.2px] shadow-sm w-full max-w-screen-md">
+                  <thead>
+                    <tr className="p-5 grid grid-cols-8 md:grid-cols-9 justify-items-start w-full bg-gray-100 text-xs md:text-base">
+                      <th className="capitalize col-span-3">Title</th>
+                      <th className="capitalize col-span-1">sem</th>
+                      <th className="capitalize col-span-1">branch</th>
+                      <th className="capitalize col-span-1">subject</th>
+                      <th className="capitalize col-span-1 md:col-span-2">
+                        postedBy
+                      </th>
+                      <th className="capitalize col-span-1">createdAt</th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody className="">
+                    {userClassLinks.data.length > 0 ? (
+                      userClassLinks?.data?.map((classLink) => (
+                        <ClassLinkItem
+                          key={classLink._id}
+                          classLink={classLink}
+                        />
+                      ))
+                    ) : (
+                      <tr className="p-5 grid place-items-center w-full text-xs md:text-base">
+                        <td className="text-3xl font-medium">
+                          No Classes Found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+          {session.user.role === UserRole.Admin &&
+            !isEditing &&
+            currentUser && (
+              <div className="animate-slide-up">
+                <p className="my-10 text-xl font-medium w-full max-w-screen-md mx-auto">
+                  Approvals Needed for Faculty:
+                </p>
+
+                <table className="table-auto mx-auto bg-white border-[0.2px] shadow-sm w-full max-w-screen-md">
+                  <thead>
+                    <tr className="p-5 grid grid-cols-4 justify-items-center w-full bg-gray-100 text-xs md:text-base">
+                      <th className="capitalize col-span-1">uid</th>
+                      <th className="capitalize col-span-1">branch</th>
+                      <th className="capitalize col-span-1">email</th>
+                      <th className="capitalize col-span-1">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="">
+                    {unapprovedFacultyDetails !== null ||
+                    unapprovedFacultyDetails?.length > 0 ? (
+                      unapprovedFacultyDetails.map((faculty) => (
+                        <tr className="p-5 grid grid-cols-4 justify-items-center place-items-center w-full text-xs md:text-base">
+                          <td className="col-span-1 text-xs">{faculty.uid}</td>
+                          <td className="col-span-1 text-xs">
+                            {faculty.branch}
+                          </td>
+                          <td className="col-span-1 text-xs uppercase overflow-hidden">
+                            {faculty.email}
+                          </td>
+                          <td className="col-span-1 text-xs">
+                            <button
+                              onClick={() => {
+                                updateUser({
+                                  uid: faculty.uid,
+                                  isApprovedAsFaculty: true,
+                                }).then(() => {
+                                  const rest = unapprovedFacultyDetails.filter(
+                                    (fac) => fac.uid !== faculty.uid
+                                  );
+                                  setUnapprovedFacultyDetails(rest);
+                                });
+                              }}
+                              className="authButton"
+                            >
+                              Approve
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="p-5 grid place-items-center w-full text-xs md:text-base">
+                        <td className="text-3xl font-medium">
+                          No Faculty profiles found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
         </div>
       </div>
     </div>
@@ -187,6 +265,7 @@ export async function getServerSideProps(ctx) {
   const session = await getSession(ctx);
   const user = await getuser(ctx.query.id);
   const userClassLinks = await getUserClassLinks(ctx.query.id);
+  const unapprovedFacultyDetails = await getUnapprovedFacultyDetails();
 
   if (user.hasError) {
     return {
@@ -204,6 +283,11 @@ export async function getServerSideProps(ctx) {
   }
 
   return {
-    props: { session, userData: user, userClassLinks },
+    props: {
+      session,
+      userData: user,
+      userClassLinks,
+      unapprovedFacultyDetails,
+    },
   };
 }

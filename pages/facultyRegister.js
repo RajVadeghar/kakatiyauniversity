@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { registeruser } from "../utils/request";
+import { UserRole } from "../models/User";
 
 function FacultyRegister() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -54,7 +55,14 @@ function FacultyRegister() {
   const createUser = async (e) => {
     e.preventDefault();
 
-    const payload = { uid: userId, branch, email, password, isFaculty: true };
+    const payload = {
+      uid: userId,
+      branch,
+      email,
+      password,
+      role: UserRole.Faculty,
+      isApprovedAsFaculty: false,
+    };
     setLoading(true);
     const user = await registeruser(payload);
 

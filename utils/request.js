@@ -27,6 +27,16 @@ export const registeruser = async (payload) => {
   }
 };
 
+export const askForApproval = async (payload) => {
+  try {
+    const res = await axios.post("/api/user/approval", payload);
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};
+
 export const updateuser = async (payload) => {
   try {
     const res = await axios.put(`/api/user/${payload.uid}`, payload);
@@ -90,6 +100,16 @@ export const getClass = async (id) => {
 export const getUserClassLinks = async (id) => {
   try {
     const res = await axios.get(`${server}/api/user/classlink/${id}`);
+    return res.data;
+  } catch (error) {
+    const errorMsg = getValue(error, ["response", "data"]);
+    return errorMsg;
+  }
+};
+
+export const getUnapprovedFacultyDetails = async () => {
+  try {
+    const res = await axios.get(`${server}/api/user/approval`);
     return res.data;
   } catch (error) {
     const errorMsg = getValue(error, ["response", "data"]);

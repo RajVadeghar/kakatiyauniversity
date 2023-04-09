@@ -1,15 +1,17 @@
+import { UserRole } from "../models/User";
+
 function FormInput(props) {
   const {
     uid,
     label,
     onChange,
     isEditable = true,
-    isFaculty = false,
+    role,
     ...inputProps
   } = props;
 
   if (
-    isFaculty &&
+    (role === UserRole.Admin || role === UserRole.Faculty) &&
     (props.name === "dateOfJoining" || props.name === "dateOfPassOut")
   ) {
     return null;

@@ -1,5 +1,13 @@
 import mongoose from "mongoose";
 
+const allowedRoles = ["Student", "Faculty", "Admin"];
+
+export const UserRole = Object.freeze({
+  Student: "Student",
+  Faculty: "Faculty",
+  Admin: "Admin",
+});
+
 const UserSchema = new mongoose.Schema(
   {
     uid: {
@@ -30,9 +38,16 @@ const UserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    isFaculty: {
-      type: Boolean,
-      default: false,
+    role: {
+      type: String,
+      validate: {
+        validator: function (v) {
+          return allowedRoles.includes(v);
+        },
+        message: (props) => `${props.value} is not a valid role`,
+      },
+      enum: allowedRoles,
+      required: true,
     },
     name: {
       type: String,
@@ -48,6 +63,13 @@ const UserSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: String,
+    },
+    isApprovedAsFaculty: {
+      type: Boolean,
+      required: function () {
+        return this.role === UserRole.Faculty;
+      },
+      default: false,
     },
   },
   {

@@ -18,7 +18,10 @@ export default async function handler(req, res) {
 
   if (method === "POST") {
     try {
-      if (session?.user.isFaculty) {
+      if (
+        session.user.role === UserRole.Admin ||
+        session.user.role === UserRole.Faculty
+      ) {
         const { title, desc, year, branch, subject } = req.body;
         validateAllOnce({
           title,
@@ -40,7 +43,7 @@ export default async function handler(req, res) {
 
         responseHandler(classLink, res);
       } else {
-        errorHandler("Only faculty can create class links", res);
+        errorHandler("Only faculty or admin can create class links", res);
       }
     } catch (error) {
       errorHandler(error, res);
