@@ -1,9 +1,0 @@
-# Dependencies directory
-node_modules/
-
-# Build output
-build/
-
-# Next.js artifacts
-/.next/
-/out/
