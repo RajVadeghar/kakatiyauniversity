@@ -7,7 +7,7 @@ export async function middleware(req) {
     const session = await getToken({
       req,
       secret: process.env.JWT_SECRET,
-      secureCookie: process.env.NODE_ENV === "production",
+      secureCookie: process.env.NODE_ENV === "production"
     });
     if (!session) return NextResponse.redirect("/");
   }
@@ -20,7 +20,7 @@ export async function middleware(req) {
     const session = await getToken({
       req,
       secret: process.env.JWT_SECRET,
-      secureCookie: process.env.NODE_ENV === "production",
+      secureCookie: process.env.NODE_ENV === "production"
     });
     if (session) return NextResponse.redirect("/dashboard");
   }

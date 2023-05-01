@@ -1,11 +1,11 @@
+import ClassLink from "../../../../models/ClassLink";
 import { errorHandler, responseHandler } from "../../../../utils/common";
 import dbConnect from "../../../../utils/mongo";
-import ClassLink from "../../../../models/ClassLink";
 
 export default async function handler(req, res) {
   const {
     method,
-    query: { id },
+    query: { id }
   } = req;
 
   dbConnect();
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   if (method === "GET") {
     try {
       const classLink = await ClassLink.aggregate([
-        { $match: { "postedBy.uid": id } },
+        { $match: { "postedBy.uid": id } }
       ]);
       responseHandler(classLink, res);
     } catch (error) {

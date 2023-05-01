@@ -1,5 +1,6 @@
-import { signOut, useSession } from "next-auth/react";
+/* eslint-disable @next/next/no-img-element */
 import { LogoutIcon, UserCircleIcon } from "@heroicons/react/outline";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -16,58 +17,56 @@ function Navbar() {
 
   return (
     <div
-      className={`h-20 border-b-2 shadow-md ${loading && "animate-pulse"} z-50`}
-    >
-      <div className="w-screen px-5 md:px-0 md:max-w-screen-2xl xl:max-w-screen-xl mx-auto flex items-center justify-between h-full">
+      className={`h-20 border-b-2 shadow-md ${
+        loading && "animate-pulse"
+      } z-50`}>
+      <div className="mx-auto flex h-full w-screen items-center justify-between px-5 md:max-w-screen-2xl md:px-0 xl:max-w-screen-xl">
         <div>
-          <h1
+          <button
             onClick={() => router.push(`/${session?.user.uid}`)}
-            className="hidden md:inline-block font-Dongle text-4xl before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-indigo-500 relative hover:cursor-pointer"
-          >
-            <span className="relative text-white font-bold">
+            className="relative hidden font-Dongle text-4xl before:absolute before:-inset-1 before:block before:-skew-y-3 before:bg-indigo-500 hover:cursor-pointer md:inline-block">
+            <span className="relative font-bold text-white">
               Hieee, {session?.user.name || session?.user.uid || ""}
             </span>
-          </h1>
+          </button>
         </div>
         <ul className="flex items-center space-x-4 sm:space-x-7">
-          <li
+          <button
             onClick={() => router.push("/assignments")}
-            className={`link text-slate-800 text-sm sm:text-base ${
+            className={`link text-sm text-slate-800 sm:text-base ${
               router.pathname === "/assignments" && "active"
-            }`}
-          >
+            }`}>
             Assignments
-          </li>
-          <li
+          </button>
+          <button
             onClick={() => router.push("/dashboard")}
-            className={`link text-slate-800 text-sm sm:text-base ${
+            className={`link text-sm text-slate-800 sm:text-base ${
               router.pathname === "/dashboard" && "active"
-            }`}
-          >
+            }`}>
             Class Links
-          </li>
-          <li
+          </button>
+          <button
             onClick={() => router.push(`/${session.user.uid}`)}
             className={`link text-slate-800 ${
               router.pathname === "/profile" && "active"
-            }`}
-          >
-            <div className="h-11 w-11 rounded-full overflow-hidden">
+            }`}>
+            <div className="h-11 w-11 overflow-hidden rounded-full">
               {session?.user.img ? (
                 <img
-                  className="h-full object-cover object-center rounded-full brightness-110"
+                  className="h-full rounded-full object-cover object-center brightness-110"
                   src={session?.user.img}
+                  alt="profile"
                 />
               ) : (
                 <UserCircleIcon className="h-full" />
               )}
             </div>
-          </li>
-          <li onClick={logout} className="link text-slate-800">
+          </button>
+          <button onClick={logout} className="link text-slate-800">
             <div className="h-9">
               <LogoutIcon className="h-full" />
             </div>
-          </li>
+          </button>
         </ul>
       </div>
     </div>

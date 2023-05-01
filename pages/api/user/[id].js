@@ -1,13 +1,13 @@
+import bcrypt from "bcrypt";
+import { getSession } from "next-auth/react";
 import User, { UserRole } from "../../../models/User";
 import { errorHandler, responseHandler } from "../../../utils/common";
 import dbConnect from "../../../utils/mongo";
-import bcrypt from "bcrypt";
-import { getSession } from "next-auth/react";
 
 export default async function handler(req, res) {
   const {
     method,
-    query: { id },
+    query: { id }
   } = req;
   const session = await getSession({ req });
 
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
         }
 
         const user = await User.findOneAndUpdate({ uid: id }, req.body, {
-          new: true,
+          new: true
         });
 
         const userDoc = await user._doc;
@@ -58,7 +58,7 @@ export default async function handler(req, res) {
         session.user.role === UserRole.Admin ||
         session.user.role === UserRole.Faculty
       ) {
-        const user = await User.deleteOne({ uid: id });
+        await User.deleteOne({ uid: id });
         responseHandler("Account has been deleted successfully", res);
       } else {
         return errorHandler("only faculty or admin can delete accounts", res);

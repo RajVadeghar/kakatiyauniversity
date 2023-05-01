@@ -1,14 +1,7 @@
 import { UserRole } from "../models/User";
 
 function FormInput(props) {
-  const {
-    uid,
-    label,
-    onChange,
-    isEditable = true,
-    role,
-    ...inputProps
-  } = props;
+  const { label, onChange, isEditable = true, role, ...inputProps } = props;
 
   if (
     (role === UserRole.Admin || role === UserRole.Faculty) &&
@@ -23,7 +16,7 @@ function FormInput(props) {
         {label}:{" "}
       </label>
       <input
-        className={`input ${!isEditable && "bg-slate-200 cursor-not-allowed"}`}
+        className={`input ${!isEditable && "cursor-not-allowed bg-slate-200"}`}
         {...inputProps}
         onChange={onChange}
         readOnly={!isEditable}

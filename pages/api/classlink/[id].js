@@ -1,12 +1,12 @@
+import { getSession } from "next-auth/react";
+import ClassLink from "../../../models/ClassLink";
 import { errorHandler, responseHandler } from "../../../utils/common";
 import dbConnect from "../../../utils/mongo";
-import ClassLink from "../../../models/ClassLink";
-import { getSession } from "next-auth/react";
 
 export default async function handler(req, res) {
   const {
     method,
-    query: { id },
+    query: { id }
   } = req;
   const session = await getSession({ req });
 
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
           id,
           { $pull: { watchedBy: { uid: req.body.uid } } },
           {
-            new: true,
+            new: true
           }
         );
 
@@ -47,12 +47,12 @@ export default async function handler(req, res) {
             $addToSet: {
               watchedBy: {
                 uid: req.body.uid,
-                watchedPercent: req.body.percent,
-              },
-            },
+                watchedPercent: req.body.percent
+              }
+            }
           },
           {
-            new: true,
+            new: true
           }
         );
       } else if (session.user.uid === req.body.uid) {

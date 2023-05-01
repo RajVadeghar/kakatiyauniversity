@@ -1,12 +1,13 @@
+/* eslint-disable @next/next/no-img-element */
 import { Dialog, Transition } from "@headlessui/react";
 import { CameraIcon } from "@heroicons/react/outline";
-import { Fragment, useRef, useState } from "react";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "../utils/firebase";
-import { updateuser } from "../utils/request";
+import { Fragment, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggle } from "../redux/modalSlice";
 import { update } from "../redux/userSlice";
+import { storage } from "../utils/firebase";
+import { updateuser } from "../utils/request";
 
 function Modal() {
   const isOpen = useSelector((state) => state.modalState.isOpen);
@@ -55,16 +56,18 @@ function Modal() {
       },
       (err) => setErrorMessage(err),
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
-          const updatedUser = await updateuser({
-            uid: user.data.uid,
-            img: url,
-          });
-          dispatch(update(updatedUser));
-          setLoading(false);
-          setSelectedFile(null);
-          setProgress(0);
-        });
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then(async (url) => {
+            const updatedUser = await updateuser({
+              uid: user.data.uid,
+              img: url
+            });
+            dispatch(update(updatedUser));
+            setLoading(false);
+            setSelectedFile(null);
+            setProgress(0);
+          })
+          .catch(console.error);
       }
     );
 
@@ -78,11 +81,10 @@ function Modal() {
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed z-10 inset-0 overflow-y-auto"
+        className="fixed inset-0 z-10 overflow-y-auto"
         initialFocus={cancelButtonRef}
-        onClose={() => dispatch(toggle())}
-      >
-        <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        onClose={() => dispatch(toggle())}>
+        <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -90,15 +92,13 @@ function Modal() {
             enterTo="opacity-100"
             leave="ease-in duration-200"
             leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
+            leaveTo="opacity-0">
             <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
 
           <span
-            className="hidden sm:inline-block sm:align-middle sm:h-screen"
-            aria-hidden="true"
-          >
+            className="hidden sm:inline-block sm:h-screen sm:align-middle"
+            aria-hidden="true">
             &#8203;
           </span>
           <Transition.Child
@@ -108,35 +108,35 @@ function Modal() {
             enterTo="opacity-100 translate-y-0 sm:scale-100"
             leave="ease-in duration-200"
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          >
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full p-8">
+            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+            <div className="inline-block transform overflow-hidden rounded-lg bg-white p-8 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:align-middle">
               <div className="flex flex-col justify-center space-y-2">
                 {selectedFile ? (
-                  <img
-                    className="w-full object-contain cursor-pointer rounded-md"
-                    src={selectedFile}
+                  <button
                     onClick={() => setSelectedFile(null)}
-                    alt=""
-                  />
+                    className="w-full cursor-pointer rounded-md object-contain">
+                    <img
+                      className="w-full cursor-pointer rounded-md object-contain"
+                      src={selectedFile}
+                      alt="selected"
+                    />
+                  </button>
                 ) : (
-                  <div
+                  <button
                     onClick={() => filePickerRef.current.click()}
-                    className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 cursor-pointer"
-                  >
+                    className="mx-auto flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-red-100">
                     <div className="h-6 w-6">
                       <CameraIcon
                         className="h-full w-full text-red-600"
                         aria-hidden="true"
                       />
                     </div>
-                  </div>
+                  </button>
                 )}
 
                 <Dialog.Title
                   as="h3"
-                  className="text-lg text-center leading-6 font-medium text-gray-900"
-                >
+                  className="text-center text-lg font-medium leading-6 text-gray-900">
                   Upload Profile Picture
                 </Dialog.Title>
 
@@ -151,7 +151,7 @@ function Modal() {
                 </div>
 
                 {errorMessage && (
-                  <p className="text-red-600 text-center uppercase text-xs">
+                  <p className="text-center text-xs uppercase text-red-600">
                     {errorMessage}
                   </p>
                 )}
@@ -159,18 +159,17 @@ function Modal() {
                 <div className="mt-2">
                   <button
                     disabled={!selectedFile}
-                    className="px-3 p-2 bg-red-600 text-white uppercase text-sm rounded-md transition-all hover:ring-2 hover:ring-red-600 hover:bg-white hover:text-red-600 w-full cursor-pointer"
-                    onClick={uploadImage}
-                  >
+                    className="w-full cursor-pointer rounded-md bg-red-600 p-2 px-3 text-sm uppercase text-white transition-all hover:bg-white hover:text-red-600 hover:ring-2 hover:ring-red-600"
+                    onClick={uploadImage}>
                     Upload
                   </button>
                 </div>
               </div>
-              <div className="absolute h-3 bottom-0 left-0 right-0">
+              <div className="absolute bottom-0 left-0 right-0 h-3">
                 <div className="relative h-full w-full bg-gray-300">
                   <div
                     style={{ width: `${progress}%` }}
-                    className={`absolute inset-0 bg-red-600 h-full`}
+                    className={`absolute inset-0 h-full bg-red-600`}
                   />
                 </div>
               </div>

@@ -1,13 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import { CameraIcon, UserCircleIcon } from "@heroicons/react/solid";
-import { useSession } from "next-auth/react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toggle } from "../redux/modalSlice";
 
 function Avatar({ src = null, height = 11 }) {
-  const { data: session } = useSession();
-
   const dispatch = useDispatch();
-  const isOpen = useSelector((state) => state.modalState.isOpen);
+  // const isOpen = useSelector((state) => state.modalState.isOpen);
 
   const uploadPhoto = () => {
     dispatch(toggle());
@@ -15,11 +13,10 @@ function Avatar({ src = null, height = 11 }) {
 
   return (
     <div
-      className={`grid place-items-center h-${height} w-${height} rounded-full overflow-hidden relative group ring-4 ring-indigo-500 bg-white`}
-    >
+      className={`grid place-items-center h-${height} w-${height} group relative overflow-hidden rounded-full bg-white ring-4 ring-indigo-500`}>
       {src ? (
         <img
-          className="object-cover object-top h-full rounded-full brightness-110"
+          className="h-full rounded-full object-cover object-top brightness-110"
           src={src}
           alt=""
         />
@@ -33,14 +30,13 @@ function Avatar({ src = null, height = 11 }) {
           alt=""
         />
       </div> */}
-      <div
+      <button
         onClick={uploadPhoto}
-        className="absolute inset-0 grid place-items-center bg-black/50 opacity-0 group-hover:opacity-100 group-hover:cursor-pointer"
-      >
-        <div className="h-16 p-3 bg-black/10 rounded-full">
+        className="absolute inset-0 grid place-items-center bg-black/50 opacity-0 group-hover:cursor-pointer group-hover:opacity-100">
+        <div className="h-16 rounded-full bg-black/10 p-3">
           <CameraIcon className="h-full text-white" />
         </div>
-      </div>
+      </button>
     </div>
   );
 }

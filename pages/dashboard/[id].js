@@ -1,35 +1,36 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 import { SearchIcon } from "@heroicons/react/outline";
+import { deleteObject, ref } from "firebase/storage";
 import moment from "moment";
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import Navbar from "../../components/Navbar";
+import { UserRole } from "../../models/User";
+import { storage } from "../../utils/firebase";
 import {
   deleteClassLink,
   getClass,
-  updateClassLink,
+  updateClassLink
 } from "../../utils/request";
-import { deleteObject, ref } from "firebase/storage";
-import { storage } from "../../utils/firebase";
-import { useState } from "react";
 
 function VideoPage({ classLink }) {
   const { data: session } = useSession();
 
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [, setErrorMessage] = useState("");
   const router = useRouter();
   const {
     title,
     desc,
     video,
-    year,
     sem,
     branch,
     subject,
     postedBy,
     createdAt,
-    watchedBy,
+    watchedBy
   } = classLink;
 
   function userExists() {
@@ -45,7 +46,7 @@ function VideoPage({ classLink }) {
     const payload = {
       id: router.query.id,
       uid: session?.user.uid,
-      percent: parseInt(percent),
+      percent: parseInt(percent)
     };
 
     if (userExists()) {
@@ -58,7 +59,7 @@ function VideoPage({ classLink }) {
     }
   };
 
-  const deleteClass = async (e) => {
+  const deleteClass = async () => {
     if (loading) return;
     setLoading(true);
 
@@ -96,26 +97,25 @@ function VideoPage({ classLink }) {
         <link rel="icon" href="/1logo.png" />
       </Head>
       <Navbar />
-      <div className="w-screen px-2 md:px-0 md:max-w-screen-2xl xl:max-w-screen-xl mx-auto flex items-center justify-between h-full">
-        <section className="py-2 w-full">
-          <div className="p-5 w-full flex flex-col space-y-5 max-w-screen-md mx-auto bg-white border-[0.2px] shadow-sm">
+      <div className="mx-auto flex h-full w-screen items-center justify-between px-2 md:max-w-screen-2xl md:px-0 xl:max-w-screen-xl">
+        <section className="w-full py-2">
+          <div className="mx-auto flex w-full max-w-screen-md flex-col space-y-5 border-[0.2px] bg-white p-5 shadow-sm">
             <video
-              className="w-full aspect-video"
+              className="aspect-video w-full"
               controls
               controlsList="nodownload"
               disablePictureInPicture
               onTimeUpdate={handleTime}
-              onEnded={handleVideoEnded}
-            >
+              onEnded={handleVideoEnded}>
               <source src={video?.url} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
             <div className="flex items-start justify-between">
               <div className="flex flex-col md:space-y-2">
-                <h1 className="text-xl md:text-4xl font-medium text-gray-900">
+                <h1 className="text-xl font-medium text-gray-900 md:text-4xl">
                   {title}
                 </h1>
-                <p className="text-base md:text-md leading-tight text-gray-700 tracking-widest">
+                <p className="md:text-md text-base leading-tight tracking-widest text-gray-700">
                   {desc}
                 </p>
                 <p className="text-xs text-gray-500">
@@ -126,22 +126,21 @@ function VideoPage({ classLink }) {
                   postedBy.uid === session.user.uid && (
                     <button
                       onClick={deleteClass}
-                      className={`mt-3 px-4 p-2 w-max bg-red-500 text-white uppercase text-xs md:text-sm rounded-md hover:ring-2 hover:ring-red-500 hover:bg-white hover:text-red-500 ${
+                      className={`mt-3 w-max rounded-md bg-red-500 p-2 px-4 text-xs uppercase text-white hover:bg-white hover:text-red-500 hover:ring-2 hover:ring-red-500 md:text-sm ${
                         loading && "opacity-50"
-                      }`}
-                    >
+                      }`}>
                       {loading ? "Deleting" : "Delete Class"}
                     </button>
                   )}
               </div>
               <div className="flex flex-col items-end space-y-1">
-                <p className="text-[10px] md:text-xs text-gray-600 lowercase">
+                <p className="text-[10px] lowercase text-gray-600 md:text-xs">
                   {subject}
                 </p>
-                <p className="text-[10px] md:text-xs text-gray-600">
+                <p className="text-[10px] text-gray-600 md:text-xs">
                   {postedBy.name || postedBy.email || postedBy.uid}
                 </p>
-                <p className="text-[10px] md:text-xs text-gray-600">
+                <p className="text-[10px] text-gray-600 md:text-xs">
                   {moment(createdAt).format("llll")}
                 </p>
               </div>
@@ -150,11 +149,11 @@ function VideoPage({ classLink }) {
           {(session.user.role === UserRole.Admin ||
             session.user.role === UserRole.Faculty) &&
             postedBy.uid === session.user.uid && (
-              <div className="p-5 w-full flex flex-col space-y-5 max-w-screen-md mx-auto bg-white border-[0.2px] shadow-sm mt-4">
-                <h1 className="text-2xl md:text-4xl text-center font-thin uppercase">
+              <div className="mx-auto mt-4 flex w-full max-w-screen-md flex-col space-y-5 border-[0.2px] bg-white p-5 shadow-sm">
+                <h1 className="text-center text-2xl font-thin uppercase md:text-4xl">
                   Watched By
                 </h1>
-                <div className="input flex gap-x-5 mx-auto">
+                <div className="input mx-auto flex gap-x-5">
                   <div className="h-7 w-7">
                     <SearchIcon className="h-full w-full text-gray-400" />
                   </div>
@@ -164,9 +163,9 @@ function VideoPage({ classLink }) {
                     placeholder="Enter roll number"
                   />
                 </div>
-                <table className="table-auto mx-auto bg-white border-[0.2px] shadow-sm w-full max-w-screen-md">
+                <table className="mx-auto w-full max-w-screen-md table-auto border-[0.2px] bg-white shadow-sm">
                   <thead>
-                    <tr className="p-5 grid grid-cols-2 justify-items-start w-full bg-gray-100 text-xs md:text-base">
+                    <tr className="grid w-full grid-cols-2 justify-items-start bg-gray-100 p-5 text-xs md:text-base">
                       <th>Roll No</th>
                       <th>Watched Percentage</th>
                     </tr>
@@ -175,8 +174,7 @@ function VideoPage({ classLink }) {
                     {watchedBy.map((user, i) => (
                       <tr
                         key={i}
-                        className="p-5 grid grid-cols-2 justify-items-start w-full text-xs md:text-base"
-                      >
+                        className="grid w-full grid-cols-2 justify-items-start p-5 text-xs md:text-base">
                         <td className="col-span-1">{user.uid}</td>
                         <td className="col-span-1">{user.watchedPercent}%</td>
                       </tr>
@@ -195,11 +193,14 @@ export default VideoPage;
 
 export async function getServerSideProps(ctx) {
   const session = await getSession(ctx);
+  // ctx.query
+  // http://localhost:3000/dashboard/643b9de443a6f8f2d0f82339
+  // 643b9de443a6f8f2d0f82339
   const classLink = await getClass(ctx.query.id);
 
   if (classLink.hasError) {
     return {
-      notFound: true,
+      notFound: true
     };
   }
 
@@ -207,12 +208,12 @@ export async function getServerSideProps(ctx) {
     return {
       redirect: {
         destination: "/",
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
 
   return {
-    props: { session, classLink: classLink.data },
+    props: { session, classLink: classLink.data }
   };
 }

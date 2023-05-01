@@ -1,9 +1,9 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { UserRole } from "../models/User";
 import { update } from "../redux/userSlice";
 import FormInput from "./FormInput";
-import { UserRole } from "../models/User";
 
 function UserEditForm({ updateUser }) {
   const user = useSelector((state) => state.userState.data);
@@ -18,7 +18,7 @@ function UserEditForm({ updateUser }) {
     dateOfPassOut,
     desc,
     dateOfBirth,
-    name,
+    name
   } = user;
 
   const [values, setValues] = useState({
@@ -32,7 +32,7 @@ function UserEditForm({ updateUser }) {
     dateOfBirth,
     name,
     errorMessage: "",
-    successMessage: "",
+    successMessage: ""
   });
 
   const inputs = [
@@ -46,7 +46,7 @@ function UserEditForm({ updateUser }) {
         session.user.role === UserRole.Admin ||
         session.user.role === UserRole.Faculty
           ? true
-          : false,
+          : false
     },
     {
       id: 2,
@@ -58,7 +58,7 @@ function UserEditForm({ updateUser }) {
         session.user.role === UserRole.Admin ||
         session.user.role === UserRole.Faculty
           ? true
-          : false,
+          : false
     },
     {
       id: 3,
@@ -71,7 +71,7 @@ function UserEditForm({ updateUser }) {
         session.user.role === UserRole.Admin ||
         session.user.role === UserRole.Faculty
           ? true
-          : false,
+          : false
     },
     {
       id: 4,
@@ -84,7 +84,7 @@ function UserEditForm({ updateUser }) {
         session.user.role === UserRole.Admin ||
         session.user.role === UserRole.Faculty
           ? true
-          : false,
+          : false
     },
     {
       id: 5,
@@ -96,7 +96,7 @@ function UserEditForm({ updateUser }) {
         session.user.role === UserRole.Admin ||
         session.user.role === UserRole.Faculty
           ? true
-          : false,
+          : false
     },
     {
       id: 6,
@@ -104,7 +104,7 @@ function UserEditForm({ updateUser }) {
       type: "text",
       placeholder: "Your name",
       label: "User Name",
-      isEditable: true,
+      isEditable: true
     },
     {
       id: 7,
@@ -112,7 +112,7 @@ function UserEditForm({ updateUser }) {
       type: "text",
       placeholder: "Add Bio",
       label: "Bio",
-      isEditable: true,
+      isEditable: true
     },
     {
       id: 8,
@@ -120,8 +120,8 @@ function UserEditForm({ updateUser }) {
       type: "date",
       placeholder: "Your Birthday",
       label: "Birthday",
-      isEditable: true,
-    },
+      isEditable: true
+    }
   ];
 
   const submitUpdate = async (e) => {
@@ -136,7 +136,7 @@ function UserEditForm({ updateUser }) {
       dateOfPassOut,
       desc,
       dateOfBirth,
-      name,
+      name
     } = values;
 
     const payload = {
@@ -148,7 +148,7 @@ function UserEditForm({ updateUser }) {
       dateOfPassOut,
       desc,
       dateOfBirth,
-      name,
+      name
     };
 
     const user = await updateUser(payload);
@@ -158,7 +158,7 @@ function UserEditForm({ updateUser }) {
     } else {
       setValues({
         ...values,
-        successMessage: "Updated user successfully! Cheers :)",
+        successMessage: "Updated user successfully! Cheers :)"
       });
       dispatch(update(user));
     }
@@ -171,15 +171,14 @@ function UserEditForm({ updateUser }) {
   return (
     <form
       onSubmit={submitUpdate}
-      className="flex flex-col items-start space-y-4 w-full animate-slide-up"
-    >
+      className="flex w-full animate-slide-up flex-col items-start space-y-4">
       {values.errorMessage && (
-        <p className="text center text-red-500 text-center capitalize font-semibold text-sm mb-5">
+        <p className="text center mb-5 text-center text-sm font-semibold capitalize text-red-500">
           {values.errorMessage}
         </p>
       )}
       {values.successMessage && (
-        <p className="text center text-green-500 text-center capitalize font-semibold text-sm w-full">
+        <p className="text center w-full text-center text-sm font-semibold capitalize text-green-500">
           {values.successMessage}
         </p>
       )}
@@ -195,8 +194,7 @@ function UserEditForm({ updateUser }) {
 
       <button
         type="submit"
-        className="px-3 p-2 bg-blue-500 text-white uppercase text-sm rounded-md hover:ring-2 hover:ring-blue-500 hover:bg-white hover:text-blue-500"
-      >
+        className="rounded-md bg-blue-500 p-2 px-3 text-sm uppercase text-white hover:bg-white hover:text-blue-500 hover:ring-2 hover:ring-blue-500">
         Update Details
       </button>
     </form>

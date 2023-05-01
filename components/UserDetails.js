@@ -4,7 +4,6 @@ import { UserRole } from "../models/User";
 
 function UserDetails() {
   const user = useSelector((state) => state.userState.data);
-  if (!user) return;
   const [dob, setDob] = useState(null);
   const { branch, email, uid, role, dateOfPassOut, desc, dateOfBirth, name } =
     user;
@@ -12,7 +11,7 @@ function UserDetails() {
   const [currentYear, setCurrentYear] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = (e) => {
+    const unsubscribe = () => {
       const datearray = dateOfBirth?.split("-");
       dateOfBirth &&
         setDob(datearray[2] + "-" + datearray[1] + "-" + datearray[0]);
@@ -26,11 +25,13 @@ function UserDetails() {
         : setCurrentYear(currentYear - passOutYear + 5);
     };
     return unsubscribe();
-  }, [dateOfBirth]);
+  }, [dateOfBirth, dateOfPassOut]);
+
+  if (!user) return;
 
   return (
     <div className="animate-slide-up">
-      <div className="flex flex-col space-y-2 mb-3">
+      <div className="mb-3 flex flex-col space-y-2">
         <p className="flex flex-col space-y-2 text-4xl font-thin">
           {name || email}{" "}
           <span className="text-xs font-normal">
@@ -45,7 +46,7 @@ function UserDetails() {
             )
           </span>
         </p>
-        <p className="text-gray-500 font-Dongle text-2xl"> {desc}</p>
+        <p className="font-Dongle text-2xl text-gray-500"> {desc}</p>
       </div>
       <p className="uppercase">
         <span className="text-sm font-semibold text-gray-600">Branch:</span>{" "}

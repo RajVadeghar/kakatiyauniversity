@@ -2,8 +2,8 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { registeruser } from "../utils/request";
 import { UserRole } from "../models/User";
+import { registeruser } from "../utils/request";
 
 function FacultyRegister() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -30,22 +30,24 @@ function FacultyRegister() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen w-screen grid place-items-center">
+      <div className="grid min-h-screen w-screen place-items-center">
         <Head>
           <title>Faculty Authenticate</title>
           <link rel="icon" href="/1logo.png" />
         </Head>
-        <div className="flex flex-col space-y-3 items-center">
-          <p className="text-4xl text-black capitalize font-semibold">
+        <div className="flex flex-col items-center space-y-3">
+          <p className="text-4xl font-semibold capitalize text-black">
             Enter correct password to view form
           </p>
-          <div className="flex space-x-4 items-center">
+          <div className="flex items-center space-x-4">
             <span className="link text-gray-700">
               <Link href="/">Go Back</Link>
             </span>
-            <p onClick={() => location.reload()} className="link text-gray-700">
+            <button
+              onClick={() => location.reload()}
+              className="link text-gray-700">
               Enter password again
-            </p>
+            </button>
           </div>
         </div>
       </div>
@@ -61,7 +63,7 @@ function FacultyRegister() {
       email,
       password,
       role: UserRole.Faculty,
-      isApprovedAsFaculty: false,
+      isApprovedAsFaculty: false
     };
     setLoading(true);
     const user = await registeruser(payload);
@@ -80,18 +82,17 @@ function FacultyRegister() {
   };
 
   return (
-    <div className="bg-register bg-cover bg-center grid place-items-center min-h-screen overflow-hidden">
+    <div className="grid min-h-screen place-items-center overflow-hidden bg-register bg-cover bg-center">
       <Head>
         <title>{loading ? "Registering..." : "Faculty Registration"}</title>
         <link rel="icon" href="/1logo.png" />
       </Head>
       <form
-        className="flex flex-col space-y-5 2xl:w-1/4 xl:w-1/3 md:w-1/2 mx-5 p-11 bg-white shadow-md rounded-md"
-        onSubmit={createUser}
-      >
-        <h1 className="text-center text-4xl font-thin mb-5">Register</h1>
+        className="mx-5 flex flex-col space-y-5 rounded-md bg-white p-11 shadow-md md:w-1/2 xl:w-1/3 2xl:w-1/4"
+        onSubmit={createUser}>
+        <h1 className="mb-5 text-center text-4xl font-thin">Register</h1>
         {errorMessage && (
-          <p className="text-red-500 text-center capitalize font-semibold text-sm mb-5">
+          <p className="mb-5 text-center text-sm font-semibold capitalize text-red-500">
             {errorMessage}
           </p>
         )}
@@ -116,8 +117,7 @@ function FacultyRegister() {
             name="branch"
             className="input"
             value={branch}
-            onChange={(e) => setBranch(e.target.value)}
-          >
+            onChange={(e) => setBranch(e.target.value)}>
             <option hidden value=""></option>
             <option value="cse">CSE</option>
             <option value="it">IT</option>
@@ -155,8 +155,7 @@ function FacultyRegister() {
         <button
           type="submit"
           tabIndex="0"
-          className="authButton text-center cursor-pointer"
-        >
+          className="authButton cursor-pointer text-center">
           {loading ? "Registering..." : "Register"}
         </button>
         <p>

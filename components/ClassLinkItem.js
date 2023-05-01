@@ -16,16 +16,15 @@ function ClassLinkItem({ classLink }) {
       setSub(res);
     };
     return unsubscribe();
-  }, []);
+  }, [subject]);
 
   return (
-    <tr className="p-5 grid grid-cols-8 md:grid-cols-9 justify-items-start w-full text-xs md:text-base">
-      <td
+    <tr className="grid w-full grid-cols-8 justify-items-start p-5 text-xs md:grid-cols-9 md:text-base">
+      <button
         onClick={() => router.push(`/dashboard/${classLink._id}`)}
-        className="col-span-3 link"
-      >
+        className="link col-span-3">
         {title}
-      </td>
+      </button>
       <td className="col-span-1">{sem}</td>
       <td className="col-span-1">{branch}</td>
       <td className="col-span-1 uppercase">{sub}</td>

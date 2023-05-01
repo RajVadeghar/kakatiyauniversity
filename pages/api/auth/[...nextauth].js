@@ -1,11 +1,10 @@
+import bcrypt from "bcrypt";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import User from "../../../models/User";
-import dbConnect from "../../../utils/mongo";
-import bcrypt from "bcrypt";
 import { validateAllOnce } from "../../../utils/common";
+import dbConnect from "../../../utils/mongo";
 // import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import clientPromise from "../../../lib/mongo";
 
 export default NextAuth({
   providers: [
@@ -35,12 +34,12 @@ export default NextAuth({
         } catch (error) {
           throw new Error(error);
         }
-      },
-    }),
+      }
+    })
   ],
   secret: process.env.JWT_SECRET,
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       session.user = token.user;
       return session;
     },
@@ -49,10 +48,10 @@ export default NextAuth({
         token.user = user;
       }
       return token;
-    },
+    }
   },
   session: {
-    strategy: "jwt",
+    strategy: "jwt"
   },
   logger: {
     error(code, metadata) {
@@ -63,6 +62,6 @@ export default NextAuth({
     },
     debug(code, metadata) {
       console.debug(code, metadata);
-    },
-  },
+    }
+  }
 });

@@ -1,11 +1,11 @@
 import { PlusIcon } from "@heroicons/react/outline";
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import AssignmentItem from "../../components/AssignmentItem";
 import Navbar from "../../components/Navbar";
-import { useRouter } from "next/router";
-import { getAssignments } from "../../utils/request";
 import { UserRole } from "../../models/User";
+import { getAssignments } from "../../utils/request";
 
 function Assignments({ assignments }) {
   const { data: session } = useSession();
@@ -18,28 +18,27 @@ function Assignments({ assignments }) {
         <link rel="icon" href="/1logo.png" />
       </Head>
       <Navbar />
-      <div className="w-screen px-2 md:px-0 md:max-w-screen-2xl xl:max-w-screen-xl mx-auto flex items-center justify-between h-full  animate-slide-up">
-        <section className="py-2 w-full">
+      <div className="mx-auto flex h-full w-screen animate-slide-up items-center justify-between px-2 md:max-w-screen-2xl md:px-0  xl:max-w-screen-xl">
+        <section className="w-full py-2">
           {(session.user.role === UserRole.Admin ||
             session.user.role === UserRole.Faculty) && (
-            <div
+            <button
               onClick={() => router.push("/assignments/addAssignment")}
-              className="grid place-items-center p-4 w-full bg-white max-w-screen-md mx-auto border-[0.2px] shadow-sm mb-4 rounded-lg cursor-pointer group"
-            >
-              <div className="grid place-items-center h-16 w-16 bg-red-100 rounded-full group-hover:scale-105">
+              className="group mx-auto mb-4 grid w-full max-w-screen-md cursor-pointer place-items-center rounded-lg border-[0.2px] bg-white p-4 shadow-sm">
+              <div className="grid h-16 w-16 place-items-center rounded-full bg-red-100 group-hover:scale-105">
                 <div className="h-11 w-11">
                   <PlusIcon className="h-full text-red-600" />
                 </div>
               </div>
-            </div>
+            </button>
           )}
-          <ul className="p-5 w-full flex flex-col max-w-screen-md mx-auto bg-white border-[0.2px] shadow-sm">
-            {assignments.data.length > 0 ? (
-              assignments.data.map((assignment) => (
+          <ul className="mx-auto flex w-full max-w-screen-md flex-col border-[0.2px] bg-white p-5 shadow-sm">
+            {assignments?.data?.length > 0 ? (
+              assignments?.data?.map((assignment) => (
                 <AssignmentItem key={assignment._id} assignment={assignment} />
               ))
             ) : (
-              <li className="p-5 text-3xl font-medium w-full text-center">
+              <li className="w-full p-5 text-center text-3xl font-medium">
                 No Assignments Found
               </li>
             )}
@@ -61,12 +60,12 @@ export async function getServerSideProps(context) {
     return {
       redirect: {
         destination: "/",
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
 
   return {
-    props: { session, assignments },
+    props: { session, assignments }
   };
 }

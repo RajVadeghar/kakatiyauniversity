@@ -1,9 +1,5 @@
 import User, { UserRole } from "../../../models/User";
-import {
-  errorHandler,
-  responseHandler,
-  validateAllOnce,
-} from "../../../utils/common";
+import { errorHandler, responseHandler } from "../../../utils/common";
 import dbConnect from "../../../utils/mongo";
 
 export default async function handler(req, res) {
@@ -15,7 +11,7 @@ export default async function handler(req, res) {
     try {
       const unapprovedFaculty = await User.find({
         isApprovedAsFaculty: false,
-        role: UserRole.Faculty,
+        role: UserRole.Faculty
       });
 
       responseHandler(unapprovedFaculty, res);

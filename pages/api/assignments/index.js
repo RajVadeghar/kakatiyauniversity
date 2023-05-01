@@ -1,9 +1,10 @@
 import { getSession } from "next-auth/react";
 import Assignment from "../../../models/Assignment";
+import { UserRole } from "../../../models/User";
 import {
   errorHandler,
   responseHandler,
-  validateAllOnce,
+  validateAllOnce
 } from "../../../utils/common";
 import dbConnect from "../../../utils/mongo";
 
@@ -25,7 +26,7 @@ export default async function handler(req, res) {
           desc,
           sem,
           branch,
-          subject,
+          subject
         });
 
         const assignment = await Assignment.create(req.body);
@@ -41,7 +42,7 @@ export default async function handler(req, res) {
     try {
       const assignments = await Assignment.aggregate([
         { $match: {} },
-        { $sort: { createdAt: -1 } },
+        { $sort: { createdAt: -1 } }
       ]);
       responseHandler(assignments, res);
     } catch (error) {

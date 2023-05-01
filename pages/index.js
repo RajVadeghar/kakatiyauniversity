@@ -4,7 +4,7 @@ import UserCard from "../components/UserCard";
 
 export default function Home() {
   return (
-    <div className="md:min-h-screen overflow-hidden bg-slate-50 text-slate-900 antialiased">
+    <div className="overflow-hidden bg-slate-50 text-slate-900 antialiased md:min-h-screen">
       <Head>
         <title>Kakatiya University</title>
         <link rel="icon" href="/1logo.png" />
@@ -12,7 +12,7 @@ export default function Home() {
 
       <Header />
 
-      <main className="max-w-screen-xl mx-auto m-11 md:mt-32 flex flex-col md:flex-row space-y-11 md:space-y-0 justify-around">
+      <main className="m-11 mx-auto flex max-w-screen-xl flex-col justify-around space-y-11 md:mt-32 md:flex-row md:space-y-0">
         <UserCard userType="Student" img="/student.jpg" path="/register" />
         <UserCard
           userType="Faculty"

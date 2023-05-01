@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/router";
 import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 function Login() {
   const [userId, setUserId] = useState("");
@@ -27,18 +27,17 @@ function Login() {
   };
 
   return (
-    <div className="bg-login bg-cover bg-center grid place-items-center min-h-screen">
+    <div className="grid min-h-screen place-items-center bg-login bg-cover bg-center">
       <Head>
         <title>{loading ? "Signing In..." : "Sign In"}</title>
         <link rel="icon" href="/1logo.png" />
       </Head>
       <form
         onSubmit={loginUser}
-        className="flex flex-col space-y-5 2xl:w-1/4 xl:w-1/3 md:w-1/2 mx-5 p-11 bg-white shadow-md rounded-md"
-      >
-        <h1 className="text-center text-4xl font-thin mb-5">Sign In</h1>
+        className="mx-5 flex flex-col space-y-5 rounded-md bg-white p-11 shadow-md md:w-1/2 xl:w-1/3 2xl:w-1/4">
+        <h1 className="mb-5 text-center text-4xl font-thin">Sign In</h1>
         {errorMessage && (
-          <p className="text-red-500 text-center capitalize font-semibold text-sm mb-5">
+          <p className="mb-5 text-center text-sm font-semibold capitalize text-red-500">
             {errorMessage}
           </p>
         )}
@@ -68,15 +67,14 @@ function Login() {
         </div>
         <button
           type="submit"
-          className={`authButton text-center cursor-pointer ${
+          className={`authButton cursor-pointer text-center ${
             loading && "opacity-80"
           }`}
-          disabled={loading}
-        >
+          disabled={loading}>
           {loading ? "Signing In..." : "Sign In"}
         </button>
         <p>
-          Haven't registered yet?{" "}
+          Haven&apos;t registered yet?{" "}
           <span className="link">
             <Link href="/register">Register</Link>
           </span>

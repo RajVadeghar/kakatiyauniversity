@@ -11,21 +11,21 @@ import Modal from "../components/Modal";
 import Navbar from "../components/Navbar";
 import UserDetails from "../components/UserDetails";
 import UserEditForm from "../components/UserEditForm";
+import { UserRole } from "../models/User";
 import { update } from "../redux/userSlice";
 import { storage } from "../utils/firebase";
 import {
   deleteuser,
   getUnapprovedFacultyDetails,
-  getuser,
   getUserClassLinks,
-  updateuser,
+  getuser,
+  updateuser
 } from "../utils/request";
-import { UserRole } from "../models/User";
 
 function Profile({
   userData,
   userClassLinks,
-  unapprovedFacultyDetails: unapproved,
+  unapprovedFacultyDetails: unapproved
 }) {
   const { data: session } = useSession();
   const [isEditing, setIsEditing] = useState(false);
@@ -44,7 +44,7 @@ function Profile({
       dispatch(update(userData));
     };
     return unsubscribe();
-  }, []);
+  }, [dispatch, userData]);
 
   const router = useRouter();
 
@@ -88,19 +88,18 @@ function Profile({
 
   return (
     <div
-      className={`min-h-screen w-full bg-slate-50 text-slate-900 antialiased`}
-    >
+      className={`min-h-screen w-full bg-slate-50 text-slate-900 antialiased`}>
       <Head>
         <title>welcome {session?.user?.email}</title>
         <link rel="icon" href="/1logo.png" />
       </Head>
       <Navbar />
       <Modal />
-      <div className="w-screen px-5 md:px-0 md:max-w-screen-2xl xl:max-w-screen-xl mx-auto flex items-center justify-between h-full">
-        <div className="py-5 w-full">
-          <section className="relative p-11 w-full flex flex-col md:flex-row gap-y-8 items-center md:items-start gap-x-16 max-w-screen-md mx-auto bg-white border-[0.2px] shadow-sm">
+      <div className="mx-auto flex h-full w-screen items-center justify-between px-5 md:max-w-screen-2xl md:px-0 xl:max-w-screen-xl">
+        <div className="w-full py-5">
+          <section className="relative mx-auto flex w-full max-w-screen-md flex-col items-center gap-y-8 gap-x-16 border-[0.2px] bg-white p-11 shadow-sm md:flex-row md:items-start">
             {message && (
-              <p className="text-red-500 text-center capitalize font-semibold text-sm mb-5">
+              <p className="mb-5 text-center text-sm font-semibold capitalize text-red-500">
                 {message}
               </p>
             )}
@@ -108,21 +107,20 @@ function Profile({
             {(loggedInUser ||
               session.user.role === UserRole.Admin ||
               session.user.role === UserRole.Faculty) && (
-              <div
+              <button
                 onClick={() => setIsEditing((val) => !val)}
-                className="absolute top-3 right-3 h-7 font-bold text-gray-400 cursor-pointer"
-              >
+                className="absolute top-3 right-3 h-7 cursor-pointer font-bold text-gray-400">
                 {isEditing ? (
                   <XIcon className="h-full" />
                 ) : (
                   <PencilIcon className="h-full" />
                 )}
-              </div>
+              </button>
             )}
 
             <Avatar src={user?.img} height="40" />
 
-            <div className="flex-1 flex flex-col items-start space-y-2">
+            <div className="flex flex-1 flex-col items-start space-y-2">
               {isEditing ? (
                 <UserEditForm updateUser={updateUser} />
               ) : (
@@ -132,8 +130,7 @@ function Profile({
                 {!isEditing && loggedInUser && (
                   <button
                     onClick={signOut}
-                    className="px-3 p-2 bg-blue-500 text-white uppercase text-sm rounded-md hover:ring-2 hover:ring-blue-500 hover:bg-white hover:text-blue-500 animate-slide-up"
-                  >
+                    className="animate-slide-up rounded-md bg-blue-500 p-2 px-3 text-sm uppercase text-white hover:bg-white hover:text-blue-500 hover:ring-2 hover:ring-blue-500">
                     Sign Out
                   </button>
                 )}
@@ -143,8 +140,7 @@ function Profile({
                     session.user.role === UserRole.Faculty) && (
                     <button
                       onClick={() => deleteUser(user.uid)}
-                      className="px-3 p-2 bg-red-500 text-white uppercase text-sm rounded-md hover:ring-2 hover:ring-red-500 hover:bg-white hover:text-red-500 animate-slide-up"
-                    >
+                      className="animate-slide-up rounded-md bg-red-500 p-2 px-3 text-sm uppercase text-white hover:bg-white hover:text-red-500 hover:ring-2 hover:ring-red-500">
                       Delete User
                     </button>
                   )}
@@ -156,21 +152,21 @@ function Profile({
             !isEditing &&
             currentUser && (
               <div className="animate-slide-up">
-                <p className="my-10 text-xl font-medium w-full max-w-screen-md mx-auto">
+                <p className="my-10 mx-auto w-full max-w-screen-md text-xl font-medium">
                   Posted By You:
                 </p>
 
-                <table className="table-auto mx-auto bg-white border-[0.2px] shadow-sm w-full max-w-screen-md">
+                <table className="mx-auto w-full max-w-screen-md table-auto border-[0.2px] bg-white shadow-sm">
                   <thead>
-                    <tr className="p-5 grid grid-cols-8 md:grid-cols-9 justify-items-start w-full bg-gray-100 text-xs md:text-base">
-                      <th className="capitalize col-span-3">Title</th>
-                      <th className="capitalize col-span-1">sem</th>
-                      <th className="capitalize col-span-1">branch</th>
-                      <th className="capitalize col-span-1">subject</th>
-                      <th className="capitalize col-span-1 md:col-span-2">
+                    <tr className="grid w-full grid-cols-8 justify-items-start bg-gray-100 p-5 text-xs md:grid-cols-9 md:text-base">
+                      <th className="col-span-3 capitalize">Title</th>
+                      <th className="col-span-1 capitalize">sem</th>
+                      <th className="col-span-1 capitalize">branch</th>
+                      <th className="col-span-1 capitalize">subject</th>
+                      <th className="col-span-1 capitalize md:col-span-2">
                         postedBy
                       </th>
-                      <th className="capitalize col-span-1">createdAt</th>
+                      <th className="col-span-1 capitalize">createdAt</th>
                     </tr>
                   </thead>
                   <tbody className="">
@@ -182,7 +178,7 @@ function Profile({
                         />
                       ))
                     ) : (
-                      <tr className="p-5 grid place-items-center w-full text-xs md:text-base">
+                      <tr className="grid w-full place-items-center p-5 text-xs md:text-base">
                         <td className="text-3xl font-medium">
                           No Classes Found
                         </td>
@@ -197,29 +193,31 @@ function Profile({
             !isEditing &&
             currentUser && (
               <div className="animate-slide-up">
-                <p className="my-10 text-xl font-medium w-full max-w-screen-md mx-auto">
+                <p className="my-10 mx-auto w-full max-w-screen-md text-xl font-medium">
                   Approvals Needed for Faculty:
                 </p>
 
-                <table className="table-auto mx-auto bg-white border-[0.2px] shadow-sm w-full max-w-screen-md">
+                <table className="mx-auto w-full max-w-screen-md table-auto border-[0.2px] bg-white shadow-sm">
                   <thead>
-                    <tr className="p-5 grid grid-cols-4 justify-items-center w-full bg-gray-100 text-xs md:text-base">
-                      <th className="capitalize col-span-1">uid</th>
-                      <th className="capitalize col-span-1">branch</th>
-                      <th className="capitalize col-span-1">email</th>
-                      <th className="capitalize col-span-1">Action</th>
+                    <tr className="grid w-full grid-cols-4 justify-items-center bg-gray-100 p-5 text-xs md:text-base">
+                      <th className="col-span-1 capitalize">uid</th>
+                      <th className="col-span-1 capitalize">branch</th>
+                      <th className="col-span-1 capitalize">email</th>
+                      <th className="col-span-1 capitalize">Action</th>
                     </tr>
                   </thead>
                   <tbody className="">
                     {unapprovedFacultyDetails !== null ||
                     unapprovedFacultyDetails?.length > 0 ? (
-                      unapprovedFacultyDetails.map((faculty) => (
-                        <tr className="p-5 grid grid-cols-4 justify-items-center place-items-center w-full text-xs md:text-base">
+                      unapprovedFacultyDetails.map((faculty, i) => (
+                        <tr
+                          key={i}
+                          className="grid w-full grid-cols-4 place-items-center justify-items-center p-5 text-xs md:text-base">
                           <td className="col-span-1 text-xs">{faculty.uid}</td>
                           <td className="col-span-1 text-xs">
                             {faculty.branch}
                           </td>
-                          <td className="col-span-1 text-xs uppercase overflow-hidden">
+                          <td className="col-span-1 overflow-hidden text-xs uppercase">
                             {faculty.email}
                           </td>
                           <td className="col-span-1 text-xs">
@@ -227,7 +225,7 @@ function Profile({
                               onClick={() => {
                                 updateUser({
                                   uid: faculty.uid,
-                                  isApprovedAsFaculty: true,
+                                  isApprovedAsFaculty: true
                                 }).then(() => {
                                   const rest = unapprovedFacultyDetails.filter(
                                     (fac) => fac.uid !== faculty.uid
@@ -235,15 +233,14 @@ function Profile({
                                   setUnapprovedFacultyDetails(rest);
                                 });
                               }}
-                              className="authButton"
-                            >
+                              className="authButton">
                               Approve
                             </button>
                           </td>
                         </tr>
                       ))
                     ) : (
-                      <tr className="p-5 grid place-items-center w-full text-xs md:text-base">
+                      <tr className="grid w-full place-items-center p-5 text-xs md:text-base">
                         <td className="text-3xl font-medium">
                           No Faculty profiles found
                         </td>
@@ -269,7 +266,7 @@ export async function getServerSideProps(ctx) {
 
   if (user.hasError) {
     return {
-      notFound: true,
+      notFound: true
     };
   }
 
@@ -277,8 +274,8 @@ export async function getServerSideProps(ctx) {
     return {
       redirect: {
         destination: "/",
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
 
@@ -287,7 +284,7 @@ export async function getServerSideProps(ctx) {
       session,
       userData: user,
       userClassLinks,
-      unapprovedFacultyDetails,
-    },
+      unapprovedFacultyDetails
+    }
   };
 }

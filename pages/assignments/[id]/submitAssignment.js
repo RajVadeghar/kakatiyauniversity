@@ -4,11 +4,7 @@ import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { storage } from "../../../utils/firebase";
-import {
-  submitAssignment,
-  updateAssignment,
-  updateSubmission,
-} from "../../../utils/request";
+import { updateAssignment } from "../../../utils/request";
 
 function SubmitAssignment() {
   const [desc, setDesc] = useState("");
@@ -44,7 +40,7 @@ function SubmitAssignment() {
 
     const payload = {
       id: router.query.id,
-      submissionData: { uid: session.user.uid, desc },
+      submissionData: { uid: session.user.uid, desc }
     };
 
     const submission = await updateAssignment(payload);
@@ -76,9 +72,9 @@ function SubmitAssignment() {
               const payload = {
                 id: router.query.id,
                 submitId: submission.data._id,
-                img: { name: imgName, url },
+                img: { name: imgName, url }
               };
-              const res = await updateAssignment(payload);
+              await updateAssignment(payload);
             });
           }
         );
@@ -105,9 +101,9 @@ function SubmitAssignment() {
               const payload = {
                 id: router.query.id,
                 submitId: submission.data._id,
-                pdf: { name: pdfName, url },
+                pdf: { name: pdfName, url }
               };
-              const res = await updateAssignment(payload);
+              await updateAssignment(payload);
             });
           }
         );
@@ -132,16 +128,15 @@ function SubmitAssignment() {
   };
 
   return (
-    <div className="bg-submitAssignment bg-cover bg-bottom grid place-items-center min-h-screen">
+    <div className="grid min-h-screen place-items-center bg-submitAssignment bg-cover bg-bottom">
       <form
-        className="relative flex flex-col space-y-5 2xl:w-1/4 xl:w-1/3 md:w-1/2 mx-5 p-11 bg-white shadow-md rounded-md"
-        onSubmit={submitassignment}
-      >
-        <h1 className="text-center text-4xl font-thin mb-5">
+        className="relative mx-5 flex flex-col space-y-5 rounded-md bg-white p-11 shadow-md md:w-1/2 xl:w-1/3 2xl:w-1/4"
+        onSubmit={submitassignment}>
+        <h1 className="mb-5 text-center text-4xl font-thin">
           Submit Assignment
         </h1>
         {errorMessage && (
-          <p className="text-red-500 text-center capitalize font-semibold text-sm mb-5">
+          <p className="mb-5 text-center text-sm font-semibold capitalize text-red-500">
             {errorMessage}
           </p>
         )}
@@ -171,49 +166,45 @@ function SubmitAssignment() {
           onChange={addPdfToPost}
           hidden
         />
-        <div className="w-full grid grid-cols-2">
+        <div className="grid w-full grid-cols-2">
           {!img ? (
-            <div
-              tabIndex="0"
-              onKeyPress={() => imgPickerRef.current.click()}
+            <button
               onClick={() => imgPickerRef.current.click()}
-              className="grid place-items-center h-11 w-11 rounded-full bg-red-100 mx-auto cursor-pointer transition-all hover:scale-105 outline-none focus:shadow-lg focus:scale-125"
-            >
+              className="mx-auto grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-red-100 outline-none transition-all hover:scale-105 focus:scale-125 focus:shadow-lg">
               <div className="h-7 w-7">
                 <CameraIcon className="h-full text-red-600" />
               </div>
-            </div>
+            </button>
           ) : (
-            <div className="cursor-pointer link" onClick={() => setImg(null)}>
+            <button
+              className="link cursor-pointer"
+              onClick={() => setImg(null)}>
               {img.name}
-            </div>
+            </button>
           )}
           {!pdf ? (
-            <div
-              tabIndex="0"
-              onKeyPress={() => pdfPickerRef.current.click()}
-              onClick={() => pdfPickerRef.current.click()}
-              className="grid place-items-center h-11 w-11 rounded-full bg-red-100 mx-auto cursor-pointer transition-all hover:scale-105 outline-none focus:shadow-lg focus:scale-125"
-            >
+            <button className="mx-auto grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-red-100 outline-none transition-all hover:scale-105 focus:scale-125 focus:shadow-lg">
               <div className="h-7 w-7">
                 <DocumentAddIcon className="h-full text-red-600" />
               </div>
-            </div>
+            </button>
           ) : (
-            <div className="cursor-pointer link" onClick={() => setPdf(null)}>
+            <button
+              className="link cursor-pointer"
+              onClick={() => setPdf(null)}>
               {pdf.name}
-            </div>
+            </button>
           )}
         </div>
 
         <button className="authButton" type="submit">
           Submit Assignment
         </button>
-        <div className="absolute h-3 bottom-0 left-0 right-0">
+        <div className="absolute bottom-0 left-0 right-0 h-3">
           <div className="relative h-full w-full bg-gray-300">
             <div
               style={{ width: `${progress}%` }}
-              className={`absolute inset-0 bg-red-600 h-full`}
+              className={`absolute inset-0 h-full bg-red-600`}
             />
           </div>
         </div>
@@ -231,8 +222,8 @@ export async function getServerSideProps(context) {
     return {
       redirect: {
         destination: "/",
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
 
@@ -240,12 +231,12 @@ export async function getServerSideProps(context) {
     return {
       redirect: {
         destination: "/assignments",
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
 
   return {
-    props: { session },
+    props: { session }
   };
 }

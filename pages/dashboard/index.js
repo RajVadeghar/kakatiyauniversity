@@ -5,15 +5,15 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import ClassLinkItem from "../../components/ClassLinkItem";
 import Navbar from "../../components/Navbar";
+import { UserRole } from "../../models/User";
 import { getSemesters, getSubjects } from "../../utils/common";
 import { getClasses } from "../../utils/request";
-import { UserRole } from "../../models/User";
 
 function Dashboard({
   classLinks,
   serverBranch,
   serverSemester,
-  serverSubject,
+  serverSubject
 }) {
   const [semesters, setSemesters] = useState([]);
   const [branch, setBranch] = useState(serverBranch);
@@ -44,7 +44,7 @@ function Dashboard({
     queryStringArray.push(semester ? `semester=${semester}` : "");
     queryStringArray.push(subject ? `subject=${sub}` : "");
 
-    const queryString = "";
+    let queryString = "";
     queryStringArray.map((query) => (queryString = queryString + query + "&"));
 
     // const res = await getClasses(queryString);
@@ -60,24 +60,22 @@ function Dashboard({
 
       <Navbar />
 
-      <div className="relative w-screen px-2 md:px-0 md:max-w-screen-2xl xl:max-w-screen-xl mx-auto h-full animate-slide-up">
+      <div className="relative mx-auto h-full w-screen animate-slide-up px-2 md:max-w-screen-2xl md:px-0 xl:max-w-screen-xl">
         <div className="absolute -top-[61px] left-2">
-          <div
+          <button
             onClick={() => setIsVisible((isVisible) => !isVisible)}
-            className="md:hidden grid place-items-center h-10 w-10 bg-indigo-100 rounded-full cursor-pointer"
-          >
+            className="grid h-10 w-10 cursor-pointer place-items-center rounded-full bg-indigo-100 md:hidden">
             <div className="h-6 w-6">
-              <SearchIcon className="text-indigo-600 h-full w-full" />
+              <SearchIcon className="h-full w-full text-indigo-600" />
             </div>
-          </div>
+          </button>
         </div>
-        <section className="py-2 w-full">
-          <div className="flex flex-col gap-y-5 md:flex-row items-center md:items-start max-w-screen-lg mx-auto">
+        <section className="w-full py-2">
+          <div className="mx-auto flex max-w-screen-lg flex-col items-center gap-y-5 md:flex-row md:items-start">
             <div
               className={`${
                 !isVisible && "hidden md:flex"
-              } text-xs md:text-base max-w-screen-md md:w-60 flex flex-col space-y-5 transition-all`}
-            >
+              } flex max-w-screen-md flex-col space-y-5 text-xs transition-all md:w-60 md:text-base`}>
               <div className="w-full">
                 <label htmlFor="subject" className="label">
                   Branch:
@@ -140,36 +138,34 @@ function Dashboard({
               <button
                 disabled={!branch || !semester || !subject}
                 onClick={fetchData}
-                className="authButton disabled:opacity-80 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-white"
-              >
+                className="authButton disabled:cursor-not-allowed disabled:opacity-80 disabled:hover:bg-black disabled:hover:text-white">
                 Search Results
               </button>
             </div>
             <div className="flex-1">
               {(session.user.role === UserRole.Admin ||
                 session.user.role === UserRole.Faculty) && (
-                <div
+                <button
                   onClick={() => router.push("/dashboard/addClass")}
-                  className="grid place-items-center p-4 w-full bg-white max-w-screen-md mx-auto border-[0.2px] shadow-sm mb-4 rounded-lg cursor-pointer group"
-                >
-                  <div className="grid place-items-center h-16 w-16 bg-red-100 rounded-full group-hover:scale-105">
+                  className="group mx-auto mb-4 grid w-full max-w-screen-md cursor-pointer place-items-center rounded-lg border-[0.2px] bg-white p-4 shadow-sm">
+                  <div className="grid h-16 w-16 place-items-center rounded-full bg-red-100 group-hover:scale-105">
                     <div className="h-11 w-11">
                       <PlusIcon className="h-full text-red-600" />
                     </div>
                   </div>
-                </div>
+                </button>
               )}
-              <table className="table-auto mx-auto bg-white border-[0.2px] shadow-sm w-full max-w-screen-md">
+              <table className="mx-auto w-full max-w-screen-md table-auto border-[0.2px] bg-white shadow-sm">
                 <thead>
-                  <tr className="p-5 grid grid-cols-8 md:grid-cols-9 justify-items-start w-full bg-gray-100 text-xs md:text-base">
-                    <th className="capitalize col-span-3">Title</th>
-                    <th className="capitalize col-span-1">sem</th>
-                    <th className="capitalize col-span-1">branch</th>
-                    <th className="capitalize col-span-1">subject</th>
-                    <th className="capitalize col-span-1 md:col-span-2">
+                  <tr className="grid w-full grid-cols-8 justify-items-start bg-gray-100 p-5 text-xs md:grid-cols-9 md:text-base">
+                    <th className="col-span-3 capitalize">Title</th>
+                    <th className="col-span-1 capitalize">sem</th>
+                    <th className="col-span-1 capitalize">branch</th>
+                    <th className="col-span-1 capitalize">subject</th>
+                    <th className="col-span-1 capitalize md:col-span-2">
                       postedBy
                     </th>
-                    <th className="capitalize col-span-1">createdAt</th>
+                    <th className="col-span-1 capitalize">createdAt</th>
                   </tr>
                 </thead>
                 <tbody className="">
@@ -181,7 +177,7 @@ function Dashboard({
                       />
                     ))
                   ) : (
-                    <tr className="p-5 grid place-items-center w-full text-xs md:text-base">
+                    <tr className="grid w-full place-items-center p-5 text-xs md:text-base">
                       <td className="text-3xl font-medium">No Classes Found</td>
                     </tr>
                   )}
@@ -216,7 +212,7 @@ export async function getServerSideProps(context) {
 
   if (classLinks?.hasError) {
     return {
-      notFound: true,
+      notFound: true
     };
   }
 
@@ -224,8 +220,8 @@ export async function getServerSideProps(context) {
     return {
       redirect: {
         destination: "/",
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
 
@@ -235,7 +231,7 @@ export async function getServerSideProps(context) {
       classLinks,
       serverBranch: branch || "",
       serverSemester: semester || "",
-      serverSubject: subject || "",
-    },
+      serverSubject: subject || ""
+    }
   };
 }

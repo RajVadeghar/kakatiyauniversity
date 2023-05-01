@@ -62,38 +62,40 @@ function AddClass() {
       },
       (err) => setErrorMessage(err),
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
-          const payload = {
-            title,
-            desc,
-            video: { name: videoName, url },
-            year,
-            sem,
-            branch,
-            subject,
-            postedBy: {
-              uid: session.user.uid,
-              name: session.user?.name || `${subject} professor`,
-              email: session.user.email,
-            },
-          };
-          const classLink = await postClass(payload);
-          if (classLink.hasError) {
-            setErrorMessage(classLink.errorMessage);
-          } else {
-            setErrorMessage("");
-            setTitle("");
-            setDesc("");
-            setVideo(null);
-            setYear("");
-            setSem("");
-            setBranch("");
-            setSubject("");
-            setProgress(0);
-            setLoading(false);
-            router.push("/dashboard");
-          }
-        });
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then(async (url) => {
+            const payload = {
+              title,
+              desc,
+              video: { name: videoName, url },
+              year,
+              sem,
+              branch,
+              subject,
+              postedBy: {
+                uid: session.user.uid,
+                name: session.user?.name || `${subject} professor`,
+                email: session.user.email
+              }
+            };
+            const classLink = await postClass(payload);
+            if (classLink.hasError) {
+              setErrorMessage(classLink.errorMessage);
+            } else {
+              setErrorMessage("");
+              setTitle("");
+              setDesc("");
+              setVideo(null);
+              setYear("");
+              setSem("");
+              setBranch("");
+              setSubject("");
+              setProgress(0);
+              setLoading(false);
+              router.push("/dashboard");
+            }
+          })
+          .catch(console.error);
       }
     );
 
@@ -101,14 +103,13 @@ function AddClass() {
   };
 
   return (
-    <div className="bg-addClass bg-cover bg-center grid place-items-center min-h-screen">
+    <div className="grid min-h-screen place-items-center bg-addClass bg-cover bg-center">
       <form
-        className="relative flex flex-col space-y-5 2xl:w-1/4 xl:w-1/3 md:w-1/2 mx-5 p-11 bg-white shadow-md rounded-md"
-        onSubmit={addClassLink}
-      >
-        <h1 className="text-center text-4xl font-thin mb-5">Add Class</h1>
+        className="relative mx-5 flex flex-col space-y-5 rounded-md bg-white p-11 shadow-md md:w-1/2 xl:w-1/3 2xl:w-1/4"
+        onSubmit={addClassLink}>
+        <h1 className="mb-5 text-center text-4xl font-thin">Add Class</h1>
         {errorMessage && (
-          <p className="text-red-500 text-center capitalize font-semibold text-sm mb-5">
+          <p className="mb-5 text-center text-sm font-semibold capitalize text-red-500">
             {errorMessage}
           </p>
         )}
@@ -145,20 +146,19 @@ function AddClass() {
         />
         <div className="w-full">
           {!video ? (
-            <div
-              tabIndex="0"
-              onKeyPress={() => filePickerRef.current.click()}
+            <button
               onClick={() => filePickerRef.current.click()}
-              className="grid place-items-center h-11 w-11 rounded-full bg-red-100 mx-auto cursor-pointer transition-all hover:scale-105 outline-none focus:shadow-lg focus:scale-125"
-            >
+              className="mx-auto grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-red-100 outline-none transition-all hover:scale-105 focus:scale-125 focus:shadow-lg">
               <div className="h-7 w-7">
                 <VideoCameraIcon className="h-full text-red-600" />
               </div>
-            </div>
+            </button>
           ) : (
-            <div className="cursor-pointer link" onClick={() => setVideo(null)}>
+            <button
+              className="link cursor-pointer"
+              onClick={() => setVideo(null)}>
               {video.name}
-            </div>
+            </button>
           )}
         </div>
         <div className="w-full">
@@ -169,8 +169,7 @@ function AddClass() {
             className="input"
             name="year"
             value={year}
-            onChange={(e) => setYear(e.target.value)}
-          >
+            onChange={(e) => setYear(e.target.value)}>
             <option hidden value=""></option>
             <option value="1st">1st</option>
             <option value="2nd">2nd</option>
@@ -186,8 +185,7 @@ function AddClass() {
             className="input"
             name="sem"
             value={sem}
-            onChange={(e) => setSem(e.target.value)}
-          >
+            onChange={(e) => setSem(e.target.value)}>
             <option hidden value=""></option>
             <option value="sem1">1st</option>
             <option value="sem2">2nd</option>
@@ -207,8 +205,7 @@ function AddClass() {
             className="input"
             name="branch"
             value={branch}
-            onChange={(e) => setBranch(e.target.value)}
-          >
+            onChange={(e) => setBranch(e.target.value)}>
             <option hidden value=""></option>
             <option value="cse">CSE</option>
             <option value="it">IT</option>
@@ -240,11 +237,11 @@ function AddClass() {
         <button className="authButton" type="submit">
           Add Class
         </button>
-        <div className="absolute h-3 bottom-0 left-0 right-0">
+        <div className="absolute bottom-0 left-0 right-0 h-3">
           <div className="relative h-full w-full bg-gray-300">
             <div
               style={{ width: `${progress}%` }}
-              className={`absolute inset-0 bg-red-600 h-full`}
+              className={`absolute inset-0 h-full bg-red-600`}
             />
           </div>
         </div>
@@ -262,12 +259,12 @@ export async function getServerSideProps(context) {
     return {
       redirect: {
         destination: "/",
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
 
   return {
-    props: { session },
+    props: { session }
   };
 }

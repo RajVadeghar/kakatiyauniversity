@@ -1,16 +1,17 @@
 import { getSession } from "next-auth/react";
 import ClassLink from "../../../models/ClassLink";
+import { UserRole } from "../../../models/User";
 import {
   errorHandler,
   responseHandler,
-  validateAllOnce,
+  validateAllOnce
 } from "../../../utils/common";
 import dbConnect from "../../../utils/mongo";
 
 export default async function handler(req, res) {
   const {
     method,
-    query: { branch, semester, subject },
+    query: { branch, semester, subject }
   } = req;
   const session = await getSession({ req });
 
@@ -28,7 +29,7 @@ export default async function handler(req, res) {
           desc,
           year,
           branch,
-          subject,
+          subject
         });
 
         if (
@@ -60,16 +61,16 @@ export default async function handler(req, res) {
               $and: [
                 { branch: branch.toUpperCase() },
                 { sem: semester.toUpperCase() },
-                { subject: sub },
-              ],
-            },
+                { subject: sub }
+              ]
+            }
           },
-          { $sort: { createdAt: -1 } },
+          { $sort: { createdAt: -1 } }
         ]);
       } else {
         classLink = await ClassLink.aggregate([
           { $match: {} },
-          { $sort: { createdAt: -1 } },
+          { $sort: { createdAt: -1 } }
         ]);
       }
 

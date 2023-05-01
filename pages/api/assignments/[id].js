@@ -1,12 +1,12 @@
+import { getSession } from "next-auth/react";
+import Assignment from "../../../models/Assignment";
 import { errorHandler, responseHandler } from "../../../utils/common";
 import dbConnect from "../../../utils/mongo";
-import { getSession } from "next-auth/react";
-import Assignment, { Submission } from "../../../models/Assignment";
 
 export default async function handler(req, res) {
   const {
     method,
-    query: { id },
+    query: { id }
   } = req;
   const session = await getSession({ req });
 
@@ -33,10 +33,10 @@ export default async function handler(req, res) {
   } else if (method === "PUT") {
     try {
       if (req.body.submissionData) {
-        await Assignment.findByIdAndUpdate(req.body.id, {
+        const submission = await Assignment.findByIdAndUpdate(req.body.id, {
           $push: {
-            submissions: req.body.submissionData,
-          },
+            submissions: req.body.submissionData
+          }
         });
 
         responseHandler(submission, res);
