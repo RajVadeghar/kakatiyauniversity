@@ -31,6 +31,7 @@ export default async function handler(req, res) {
       errorHandler(error, res);
     }
   } else if (method === "PUT") {
+    console.log("Hellooooo");
     try {
       if (req.body.submissionData) {
         const submission = await Assignment.findByIdAndUpdate(req.body.id, {
@@ -41,15 +42,12 @@ export default async function handler(req, res) {
 
         responseHandler(submission, res);
       } else if (req.body.submitId) {
-        const payload = req.body;
-        delete payload.id;
-        delete payload.submitId;
-
+        console.log("Hieee");
         const assignment = await Assignment.findById(req.body.id);
 
         const submission = await assignment.submissions.findByIdAndUpdate(
           req.body.submitId,
-          payload
+          ...req.body
         );
 
         // FIXME: not updating properly. CHeck submission id from above if statement at client side

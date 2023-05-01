@@ -198,6 +198,7 @@ function AddAssignment() {
         <div className="grid w-full grid-cols-2">
           {!img ? (
             <button
+              type="button"
               onClick={() => imgPickerRef.current.click()}
               className="mx-auto grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-red-100 outline-none transition-all hover:scale-105 focus:scale-125 focus:shadow-lg">
               <div className="h-7 w-7">
@@ -206,6 +207,7 @@ function AddAssignment() {
             </button>
           ) : (
             <button
+              type="button"
               className="link cursor-pointer"
               onClick={() => setImg(null)}>
               {img.name}
@@ -213,6 +215,7 @@ function AddAssignment() {
           )}
           {!pdf ? (
             <button
+              type="button"
               onClick={() => pdfPickerRef.current.click()}
               className="mx-auto grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-red-100 outline-none transition-all hover:scale-105 focus:scale-125 focus:shadow-lg">
               <div className="h-7 w-7">
@@ -221,6 +224,7 @@ function AddAssignment() {
             </button>
           ) : (
             <button
+              type="button"
               className="link cursor-pointer"
               onClick={() => setPdf(null)}>
               {pdf.name}

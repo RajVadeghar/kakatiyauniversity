@@ -44,7 +44,8 @@ function UserEditForm({ updateUser }) {
       label: "email",
       isEditable:
         session.user.role === UserRole.Admin ||
-        session.user.role === UserRole.Faculty
+        (session.user.role === UserRole.Faculty &&
+          session.user.isApprovedAsFaculty)
           ? true
           : false
     },
@@ -56,7 +57,8 @@ function UserEditForm({ updateUser }) {
       label: "branch",
       isEditable:
         session.user.role === UserRole.Admin ||
-        session.user.role === UserRole.Faculty
+        (session.user.role === UserRole.Faculty &&
+          session.user.isApprovedAsFaculty)
           ? true
           : false
     },
@@ -69,7 +71,8 @@ function UserEditForm({ updateUser }) {
       min: "2000",
       isEditable:
         session.user.role === UserRole.Admin ||
-        session.user.role === UserRole.Faculty
+        (session.user.role === UserRole.Faculty &&
+          session.user.isApprovedAsFaculty)
           ? true
           : false
     },
@@ -82,7 +85,8 @@ function UserEditForm({ updateUser }) {
       min: "2000",
       isEditable:
         session.user.role === UserRole.Admin ||
-        session.user.role === UserRole.Faculty
+        (session.user.role === UserRole.Faculty &&
+          session.user.isApprovedAsFaculty)
           ? true
           : false
     },
@@ -94,7 +98,8 @@ function UserEditForm({ updateUser }) {
       label: "Roll Number",
       isEditable:
         session.user.role === UserRole.Admin ||
-        session.user.role === UserRole.Faculty
+        (session.user.role === UserRole.Faculty &&
+          session.user.isApprovedAsFaculty)
           ? true
           : false
     },

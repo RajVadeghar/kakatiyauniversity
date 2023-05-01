@@ -147,6 +147,7 @@ function AddClass() {
         <div className="w-full">
           {!video ? (
             <button
+              type="button"
               onClick={() => filePickerRef.current.click()}
               className="mx-auto grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-red-100 outline-none transition-all hover:scale-105 focus:scale-125 focus:shadow-lg">
               <div className="h-7 w-7">
@@ -155,6 +156,7 @@ function AddClass() {
             </button>
           ) : (
             <button
+              type="button"
               className="link cursor-pointer"
               onClick={() => setVideo(null)}>
               {video.name}

@@ -144,7 +144,8 @@ function Dashboard({
             </div>
             <div className="flex-1">
               {(session.user.role === UserRole.Admin ||
-                session.user.role === UserRole.Faculty) && (
+                (session.user.role === UserRole.Faculty &&
+                  session.user.isApprovedAsFaculty)) && (
                 <button
                   onClick={() => router.push("/dashboard/addClass")}
                   className="group mx-auto mb-4 grid w-full max-w-screen-md cursor-pointer place-items-center rounded-lg border-[0.2px] bg-white p-4 shadow-sm">
@@ -169,7 +170,7 @@ function Dashboard({
                   </tr>
                 </thead>
                 <tbody className="">
-                  {classLinks.data.length > 0 ? (
+                  {classLinks?.data?.length > 0 ? (
                     classLinks?.data?.map((classLink) => (
                       <ClassLinkItem
                         key={classLink._id}

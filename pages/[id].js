@@ -106,7 +106,8 @@ function Profile({
 
             {(loggedInUser ||
               session.user.role === UserRole.Admin ||
-              session.user.role === UserRole.Faculty) && (
+              (session.user.role === UserRole.Faculty &&
+                session.user.isApprovedAsFaculty)) && (
               <button
                 onClick={() => setIsEditing((val) => !val)}
                 className="absolute top-3 right-3 h-7 cursor-pointer font-bold text-gray-400">
@@ -137,7 +138,8 @@ function Profile({
 
                 {!isEditing &&
                   (session.user.role === UserRole.Admin ||
-                    session.user.role === UserRole.Faculty) && (
+                    (session.user.role === UserRole.Faculty &&
+                      session.user.isApprovedAsFaculty)) && (
                     <button
                       onClick={() => deleteUser(user.uid)}
                       className="animate-slide-up rounded-md bg-red-500 p-2 px-3 text-sm uppercase text-white hover:bg-white hover:text-red-500 hover:ring-2 hover:ring-red-500">
@@ -149,6 +151,7 @@ function Profile({
           </section>
 
           {session.user.role === UserRole.Faculty &&
+            session.user.isApprovedAsFaculty &&
             !isEditing &&
             currentUser && (
               <div className="animate-slide-up">

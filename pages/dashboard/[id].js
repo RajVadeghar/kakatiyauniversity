@@ -122,7 +122,8 @@ function VideoPage({ classLink }) {
                   {watchedBy.length} views
                 </p>
                 {(session.user.role === UserRole.Admin ||
-                  session.user.role === UserRole.Faculty) &&
+                  (session.user.role === UserRole.Faculty &&
+                    session.user.isApprovedAsFaculty)) &&
                   postedBy.uid === session.user.uid && (
                     <button
                       onClick={deleteClass}
@@ -147,7 +148,8 @@ function VideoPage({ classLink }) {
             </div>
           </div>
           {(session.user.role === UserRole.Admin ||
-            session.user.role === UserRole.Faculty) &&
+            (session.user.role === UserRole.Faculty &&
+              session.user.isApprovedAsFaculty)) &&
             postedBy.uid === session.user.uid && (
               <div className="mx-auto mt-4 flex w-full max-w-screen-md flex-col space-y-5 border-[0.2px] bg-white p-5 shadow-sm">
                 <h1 className="text-center text-2xl font-thin uppercase md:text-4xl">

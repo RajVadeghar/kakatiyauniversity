@@ -18,7 +18,8 @@ export default async function handler(req, res) {
     try {
       if (
         session.user.role === UserRole.Admin ||
-        session.user.role === UserRole.Faculty
+        (session.user.role === UserRole.Faculty &&
+          session.user.isApprovedAsFaculty)
       ) {
         const { title, desc, sem, branch, subject } = req.body;
         validateAllOnce({

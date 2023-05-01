@@ -120,14 +120,15 @@ function Assignment({ assignment }) {
                     {submissions.length} submissions
                   </p>
                   {session.user.role === UserRole.Admin ||
-                  session.user.role === UserRole.Faculty ? (
+                  (session.user.role === UserRole.Faculty &&
+                    session.user.isApprovedAsFaculty) ? (
                     postedBy.uid === session.user.uid && (
                       <button
                         onClick={deleteAssignment}
                         className={`mt-3 w-max rounded-md bg-red-500 p-2 px-4 text-xs uppercase text-white hover:bg-white hover:text-red-500 hover:ring-2 hover:ring-red-500 md:text-sm ${
                           loading && "opacity-50"
                         }`}>
-                        {loading ? "Deleting" : "Delete Class"}
+                        {loading ? "Deleting" : "Delete Assignment"}
                       </button>
                     )
                   ) : (
@@ -157,6 +158,36 @@ function Assignment({ assignment }) {
               </div>
             </div>
           </div>
+
+          {(session.user.role === UserRole.Admin ||
+            (session.user.role === UserRole.Faculty &&
+              session.user.isApprovedAsFaculty)) &&
+            postedBy.uid === session.user.uid && (
+              <div className="mx-auto mt-4 flex w-full max-w-screen-md flex-col space-y-5 border-[0.2px] bg-white p-5 shadow-sm">
+                <h1 className="text-center text-2xl font-thin uppercase md:text-4xl">
+                  Submitted By
+                </h1>
+
+                <table className="mx-auto w-full max-w-screen-md table-auto border-[0.2px] bg-white shadow-sm">
+                  <thead>
+                    <tr className="grid w-full grid-cols-2 justify-items-start bg-gray-100 p-5 text-xs md:text-base">
+                      <th>Roll No</th>
+                      <th>Submissions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {submissions.map((user, i) => (
+                      <tr
+                        key={i}
+                        className="grid w-full grid-cols-2 justify-items-start p-5 text-xs md:text-base">
+                        <td className="col-span-1">{user.uid}</td>
+                        <td className="col-span-1">{user.watchedPercent}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
         </section>
       </div>
     </div>

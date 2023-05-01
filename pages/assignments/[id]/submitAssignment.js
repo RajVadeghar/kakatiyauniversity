@@ -3,6 +3,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
+import { UserRole } from "../../../models/User";
 import { storage } from "../../../utils/firebase";
 import { updateAssignment } from "../../../utils/request";
 
@@ -50,7 +51,8 @@ function SubmitAssignment() {
         ? setErrorMessage(submission.errorMessage)
         : setErrorMessage("Something went wrong");
     } else {
-      if (img) {
+      console.log(img);
+      if (img !== null) {
         const imgName = img.name.trim().toLowerCase();
 
         const imgRef = ref(
@@ -74,12 +76,13 @@ function SubmitAssignment() {
                 submitId: submission.data._id,
                 img: { name: imgName, url }
               };
+              console.log(payload);
               await updateAssignment(payload);
             });
           }
         );
       }
-      if (pdf) {
+      if (pdf !== null) {
         const pdfName = pdf.name.trim().toLowerCase();
 
         const pdfRef = ref(
@@ -108,8 +111,9 @@ function SubmitAssignment() {
           }
         );
       }
+
       const payload = { id: router.query.id, submitId: submission.data._id };
-      const assignment = updateAssignment(payload);
+      const assignment = await updateAssignment(payload);
       if (assignment.hasError) {
         typeof assignment.errorMessage === "string"
           ? setErrorMessage(assignment.errorMessage)
@@ -169,6 +173,7 @@ function SubmitAssignment() {
         <div className="grid w-full grid-cols-2">
           {!img ? (
             <button
+              type="button"
               onClick={() => imgPickerRef.current.click()}
               className="mx-auto grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-red-100 outline-none transition-all hover:scale-105 focus:scale-125 focus:shadow-lg">
               <div className="h-7 w-7">
@@ -177,19 +182,23 @@ function SubmitAssignment() {
             </button>
           ) : (
             <button
+              type="button"
               className="link cursor-pointer"
               onClick={() => setImg(null)}>
               {img.name}
             </button>
           )}
           {!pdf ? (
-            <button className="mx-auto grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-red-100 outline-none transition-all hover:scale-105 focus:scale-125 focus:shadow-lg">
+            <button
+              type="button"
+              className="mx-auto grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-red-100 outline-none transition-all hover:scale-105 focus:scale-125 focus:shadow-lg">
               <div className="h-7 w-7">
                 <DocumentAddIcon className="h-full text-red-600" />
               </div>
             </button>
           ) : (
             <button
+              type="button"
               className="link cursor-pointer"
               onClick={() => setPdf(null)}>
               {pdf.name}
@@ -197,9 +206,11 @@ function SubmitAssignment() {
           )}
         </div>
 
-        <button className="authButton" type="submit">
-          Submit Assignment
-        </button>
+        {session.user.role === UserRole.Student && (
+          <button className="authButton" type="submit">
+            Submit Assignment
+          </button>
+        )}
         <div className="absolute bottom-0 left-0 right-0 h-3">
           <div className="relative h-full w-full bg-gray-300">
             <div

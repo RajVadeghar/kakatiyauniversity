@@ -21,7 +21,8 @@ function Assignments({ assignments }) {
       <div className="mx-auto flex h-full w-screen animate-slide-up items-center justify-between px-2 md:max-w-screen-2xl md:px-0  xl:max-w-screen-xl">
         <section className="w-full py-2">
           {(session.user.role === UserRole.Admin ||
-            session.user.role === UserRole.Faculty) && (
+            (session.user.role === UserRole.Faculty &&
+              session.user.isApprovedAsFaculty)) && (
             <button
               onClick={() => router.push("/assignments/addAssignment")}
               className="group mx-auto mb-4 grid w-full max-w-screen-md cursor-pointer place-items-center rounded-lg border-[0.2px] bg-white p-4 shadow-sm">

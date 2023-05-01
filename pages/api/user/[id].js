@@ -56,7 +56,8 @@ export default async function handler(req, res) {
     try {
       if (
         session.user.role === UserRole.Admin ||
-        session.user.role === UserRole.Faculty
+        (session.user.role === UserRole.Faculty &&
+          session.user.isApprovedAsFaculty)
       ) {
         await User.deleteOne({ uid: id });
         responseHandler("Account has been deleted successfully", res);
