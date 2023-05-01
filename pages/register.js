@@ -29,6 +29,8 @@ function Register() {
       role: UserRole.Student
     });
 
+    console.log(user);
+
     if (user.hasError) {
       setErrorMessage(user.errorMessage);
     } else {

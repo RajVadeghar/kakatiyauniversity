@@ -68,6 +68,8 @@ function FacultyRegister() {
     setLoading(true);
     const user = await registeruser(payload);
 
+    console.log(user);
+
     if (user.hasError) {
       setErrorMessage(user.errorMessage);
     } else {
