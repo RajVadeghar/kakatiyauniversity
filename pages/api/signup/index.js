@@ -32,6 +32,8 @@ export default async function handler(req, res) {
         password: hashPassword
       });
 
+      console.log(user);
+
       const userDoc = user._doc;
 
       delete userDoc.password;
