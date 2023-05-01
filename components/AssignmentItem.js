@@ -1,8 +1,11 @@
 import moment from "moment";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { UserRole } from "../models/User";
 
 function AssignmentItem({ assignment }) {
   const { _id, title, createdAt, desc, postedBy, submissions } = assignment;
+  const { data: session } = useSession();
 
   const router = useRouter();
 
@@ -26,13 +29,15 @@ function AssignmentItem({ assignment }) {
                 className="rounded-md bg-blue-500 p-1 px-3 text-sm uppercase text-white transition-all duration-300 hover:bg-white hover:text-blue-500 hover:ring-[1.4px] hover:ring-blue-500">
                 Visit
               </button>
-              <button
-                onClick={() =>
-                  router.push(`/assignments/${_id}/submitAssignment`)
-                }
-                className="rounded-md bg-blue-500 p-1 px-3 text-sm uppercase text-white transition-all duration-300 hover:bg-white hover:text-blue-500 hover:ring-[1.4px] hover:ring-blue-500">
-                Submit Assignment
-              </button>
+              {session.user.role === UserRole.Student && (
+                <button
+                  onClick={() =>
+                    router.push(`/assignments/${_id}/submitAssignment`)
+                  }
+                  className="rounded-md bg-blue-500 p-1 px-3 text-sm uppercase text-white transition-all duration-300 hover:bg-white hover:text-blue-500 hover:ring-[1.4px] hover:ring-blue-500">
+                  Submit Assignment
+                </button>
+              )}
             </div>
           </div>
           <div className="hidden flex-col items-end space-y-2 text-xs text-slate-600 md:flex">

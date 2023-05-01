@@ -39,94 +39,86 @@ function SubmitAssignment() {
     if (loading) return;
     setLoading(true);
 
-    const payload = {
-      id: router.query.id,
-      submissionData: { uid: session.user.uid, desc }
+    const submissionData = {
+      uid: session.user.uid,
+      desc,
+      img: { name: null, url: null },
+      pdf: { name: null, url: null }
     };
 
-    const submission = await updateAssignment(payload);
+    await Promise.all([
+      img &&
+        new Promise((resolve, reject) => {
+          const imgName = img.name.trim().toLowerCase();
+          const imgRef = ref(
+            storage,
+            `AssignmentSubmissions/AssignmentImages/${session?.user.uid}/${router.query.id}/${imgName}`
+          );
+          const uploadTask = uploadBytesResumable(imgRef, img);
 
-    if (submission.hasError) {
-      typeof submission.errorMessage === "string"
-        ? setErrorMessage(submission.errorMessage)
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const prog =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              setProgress(prog);
+            },
+            (err) => reject(err),
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                submissionData.img = { name: imgName, url };
+                resolve();
+              });
+            }
+          );
+        }),
+
+      pdf &&
+        new Promise((resolve, reject) => {
+          const pdfName = pdf.name.trim().toLowerCase();
+          const pdfRef = ref(
+            storage,
+            `AssignmentSubmissions/AssignmentPdfs/${session?.user.uid}/${router.query.id}/${pdfName}`
+          );
+          const uploadTask = uploadBytesResumable(pdfRef, pdf);
+
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const prog =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              setProgress(prog);
+            },
+            (err) => reject(err),
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                submissionData.pdf = { name: pdfName, url };
+                resolve();
+              });
+            }
+          );
+        })
+    ]);
+
+    const payload = {
+      id: router.query.id,
+      submissionData
+    };
+
+    const assignment = await updateAssignment(payload);
+
+    if (assignment.hasError) {
+      typeof assignment.errorMessage === "string"
+        ? setErrorMessage(assignment.errorMessage)
         : setErrorMessage("Something went wrong");
     } else {
-      console.log(img);
-      if (img !== null) {
-        const imgName = img.name.trim().toLowerCase();
-
-        const imgRef = ref(
-          storage,
-          `AssignmentSubmissions/AssignmentImages/${session?.user.uid}/${router.query.id}/${imgName}`
-        );
-        const uploadTask = uploadBytesResumable(imgRef, img);
-
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const prog =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            setProgress(prog);
-          },
-          (err) => setErrorMessage(err),
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
-              const payload = {
-                id: router.query.id,
-                submitId: submission.data._id,
-                img: { name: imgName, url }
-              };
-              console.log(payload);
-              await updateAssignment(payload);
-            });
-          }
-        );
-      }
-      if (pdf !== null) {
-        const pdfName = pdf.name.trim().toLowerCase();
-
-        const pdfRef = ref(
-          storage,
-          `AssignmentSubmissions/AssignmentPdfs/${session?.user.uid}/${router.query.id}/${pdfName}`
-        );
-        const uploadTask = uploadBytesResumable(pdfRef, pdf);
-
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const prog =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            setProgress(prog);
-          },
-          (err) => setErrorMessage(err),
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
-              const payload = {
-                id: router.query.id,
-                submitId: submission.data._id,
-                pdf: { name: pdfName, url }
-              };
-              await updateAssignment(payload);
-            });
-          }
-        );
-      }
-
-      const payload = { id: router.query.id, submitId: submission.data._id };
-      const assignment = await updateAssignment(payload);
-      if (assignment.hasError) {
-        typeof assignment.errorMessage === "string"
-          ? setErrorMessage(assignment.errorMessage)
-          : setErrorMessage("Something went wrong");
-      } else {
-        setErrorMessage("");
-        setDesc("");
-        setImg(null);
-        setPdf(null);
-        setProgress(0);
-        setLoading(false);
-        router.push("/assignments");
-      }
+      setErrorMessage("");
+      setDesc("");
+      setImg(null);
+      setPdf(null);
+      setProgress(0);
+      setLoading(false);
+      router.push("/assignments");
     }
     setLoading(false);
   };
@@ -191,6 +183,7 @@ function SubmitAssignment() {
           {!pdf ? (
             <button
               type="button"
+              onClick={() => pdfPickerRef.current.click()}
               className="mx-auto grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-red-100 outline-none transition-all hover:scale-105 focus:scale-125 focus:shadow-lg">
               <div className="h-7 w-7">
                 <DocumentAddIcon className="h-full text-red-600" />

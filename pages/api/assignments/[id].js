@@ -6,7 +6,7 @@ import dbConnect from "../../../utils/mongo";
 export default async function handler(req, res) {
   const {
     method,
-    query: { id }
+    query: { id, submission }
   } = req;
   const session = await getSession({ req });
 
@@ -14,7 +14,20 @@ export default async function handler(req, res) {
 
   if (method === "GET") {
     try {
-      const assignment = await Assignment.findById(id);
+      let assignment;
+      if (req.query.submission) {
+        assignment = await Assignment.findOne(
+          { _id: id },
+          { submissions: { $elemMatch: { _id: submission } } }
+        );
+
+        assignment = { ...assignment._doc, isSubmission: true };
+      } else {
+        assignment = await Assignment.findById(id);
+        assignment = { ...assignment._doc, isSubmission: false };
+      }
+
+      console.log(assignment);
       responseHandler(assignment, res);
     } catch (error) {
       errorHandler(error, res);
@@ -42,26 +55,22 @@ export default async function handler(req, res) {
 
         responseHandler(submission, res);
       } else if (req.body.submitId) {
-        console.log("Hieee");
-        const assignment = await Assignment.findById(req.body.id);
-
-        const submission = await assignment.submissions.findByIdAndUpdate(
-          req.body.submitId,
-          ...req.body
-        );
-
-        // FIXME: not updating properly. CHeck submission id from above if statement at client side
-        /*  const submission = await Assignment.updateOne(
-          { _id: req.body.id },
+        const assignment = await Assignment.updateOne(
+          {
+            _id: req.body.id,
+            "submissions._id": req.body.submitId
+          },
           {
             $set: {
-              "submissions.$[submitId]": payload,
-            },
-          },
-          { arrayFilters: [{ "submitId._id": req.body.submitId }] }
-        ); */
+              "submissions.$.pdf": req.body.pdf,
+              "submissions.$.img": req.body.img,
+              "submissions.$.desc": req.body.desc
+            }
+          }
+        );
 
-        responseHandler(submission, res);
+        console.log("assignment >>>> ", assignment);
+        responseHandler(assignment, res);
       } else {
         await Assignment.findByIdAndUpdate(req.body.id, req.body);
         responseHandler("Assignment Updated", res);

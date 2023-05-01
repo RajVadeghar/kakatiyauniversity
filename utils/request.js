@@ -124,9 +124,27 @@ export const getAssignments = async () => {
   }
 };
 
-export const getAssignment = async (id) => {
+export const getAssignment = async (id, submitId) => {
   try {
-    const res = await axios.get(`${server}/api/assignments/${id}`);
+    let res;
+    if (submitId) {
+      res = await axios.get(
+        `${server}/api/assignments/${id}?submission=${submitId}`
+      );
+    } else {
+      res = await axios.get(`${server}/api/assignments/${id}`);
+    }
+    return res.data;
+  } catch (error) {
+    return getErrMessage(error);
+  }
+};
+
+export const getSubmission = async (id, submitId) => {
+  try {
+    const res = await axios.get(
+      `${server}/api/assignments/${id}?submission=${submitId}`
+    );
     return res.data;
   } catch (error) {
     return getErrMessage(error);
