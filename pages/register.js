@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { UserRole } from "../models/User";
 import { registeruser } from "../utils/request";
 
 function Register() {
@@ -24,7 +25,8 @@ function Register() {
       dateOfJoining,
       dateOfPassOut,
       email,
-      password
+      password,
+      role: UserRole.Student
     });
 
     if (user.hasError) {
