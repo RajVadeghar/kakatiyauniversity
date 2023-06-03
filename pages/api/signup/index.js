@@ -25,17 +25,18 @@ export default async function handler(req, res) {
         password
       });
 
+      // password = Test@11
+
       const hashPassword = await bcrypt.hash(req.body.password, 8);
+
+      // hashPassword = kjdqskouqehjblh2o1eyt712tgkjqwbdo
 
       const user = await User.create({
         ...req.body,
         password: hashPassword
       });
 
-      console.log(user);
-
       const userDoc = user._doc;
-
       delete userDoc.password;
 
       responseHandler(userDoc, res);

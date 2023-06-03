@@ -60,7 +60,7 @@ function Dashboard({
 
       <Navbar />
 
-      <div className="relative mx-auto h-full w-screen animate-slide-up px-2 md:max-w-screen-2xl md:px-0 xl:max-w-screen-xl">
+      <main className="relative mx-auto h-full w-screen animate-slide-up px-2 md:max-w-screen-2xl md:px-0 xl:max-w-screen-xl">
         <div className="absolute -top-[61px] left-2">
           <button
             onClick={() => setIsVisible((isVisible) => !isVisible)}
@@ -142,6 +142,7 @@ function Dashboard({
                 Search Results
               </button>
             </div>
+
             <div className="flex-1">
               {(session.user.role === UserRole.Admin ||
                 (session.user.role === UserRole.Faculty &&
@@ -187,7 +188,7 @@ function Dashboard({
             </div>
           </div>
         </section>
-      </div>
+      </main>
     </div>
   );
 }
